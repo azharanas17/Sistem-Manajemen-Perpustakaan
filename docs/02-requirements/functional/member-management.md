@@ -1,396 +1,352 @@
----
-title: Member Management
-module: Functional Requirements
-code: FR-MEM
-version: 0.1.0
-status: Draft
----
-
 # Member Management
 
-# 1. Tujuan
+## 1. Overview
 
-Modul **Member Management** bertanggung jawab untuk mengelola seluruh siklus hidup anggota perpustakaan, mulai dari proses registrasi, persetujuan keanggotaan, autentikasi, pengelolaan profil, hingga administrasi akun oleh Administrator.
+Member Management merupakan modul yang digunakan untuk mengelola data keanggotaan pengguna perpustakaan.
 
-Modul ini menjadi pintu masuk utama bagi pengguna untuk memperoleh akses terhadap seluruh layanan perpustakaan yang tersedia pada sistem.
+Modul ini menangani proses pendaftaran anggota, verifikasi dan persetujuan keanggotaan, pengelolaan data anggota, serta status keanggotaan.
 
----
+User dan Member merupakan dua konsep yang berbeda.
 
-# 2. Aktor
+- **User** merupakan akun yang digunakan untuk mengakses sistem.
+- **Member** merupakan status dan data keanggotaan seseorang pada perpustakaan.
 
-| Aktor | Deskripsi |
-|--------|-----------|
-| Administrator | Mengelola data anggota, menyetujui pendaftaran, mengubah status akun, dan melakukan administrasi pengguna. |
-| Mahasiswa | Melakukan registrasi, masuk ke sistem, mengelola profil pribadi, serta menggunakan layanan perpustakaan setelah menjadi anggota. |
-| Dosen | Melakukan registrasi, masuk ke sistem, mengelola profil pribadi, serta menggunakan layanan perpustakaan setelah menjadi anggota. |
+Dengan demikian, seseorang dapat memiliki akun pada sistem tetapi belum menjadi anggota aktif perpustakaan.
 
 ---
 
-# 3. Tujuan Bisnis
+## 2. Tujuan
 
-Implementasi modul ini bertujuan untuk:
+Modul Member Management bertujuan untuk:
 
-- Mendigitalisasi proses pendaftaran anggota perpustakaan.
-- Memastikan hanya anggota yang telah diverifikasi yang dapat menggunakan layanan perpustakaan.
-- Mempermudah Administrator dalam mengelola data anggota.
-- Menyediakan data anggota yang konsisten sebagai dasar bagi modul lain, seperti peminjaman buku dan repository.
-
----
-
-# 4. Ruang Lingkup
-
-Modul ini mencakup fitur-fitur berikut:
-
-- Registrasi anggota.
-- Persetujuan keanggotaan.
-- Login.
-- Logout.
-- Pengelolaan profil pengguna.
-- Pengelolaan akun oleh Administrator.
-- Impor data pengguna melalui file Excel.
+- Mengelola data anggota perpustakaan.
+- Menyediakan proses pendaftaran anggota secara online.
+- Memungkinkan Administrator melakukan verifikasi pendaftaran.
+- Menentukan status keanggotaan.
+- Menyimpan informasi anggota secara terstruktur.
+- Menjadi dasar validasi akses terhadap layanan perpustakaan seperti peminjaman.
 
 ---
 
-# 5. Functional Requirements
+## 3. Aktor
 
-## FR-MEM-001 — Registrasi Anggota
+### 3.1 Administrator
 
-### Deskripsi
+Administrator merupakan pustakawan yang bertanggung jawab mengelola data keanggotaan.
 
-Sistem menyediakan fasilitas registrasi mandiri bagi calon anggota perpustakaan melalui website.
+Administrator dapat:
 
-### Aktor
+- Melihat daftar pendaftaran anggota.
+- Melihat detail data anggota.
+- Memeriksa data pendaftaran.
+- Menyetujui pendaftaran anggota.
+- Menolak pendaftaran anggota.
+- Melihat daftar anggota aktif.
+- Melihat riwayat status keanggotaan.
+- Mengubah data anggota apabila diperlukan.
+- Mengelola data anggota sesuai kewenangan Administrator.
+
+### 3.2 Mahasiswa
+
+Mahasiswa dapat:
+
+- Melakukan pendaftaran keanggotaan.
+- Melihat status pendaftaran.
+- Melihat informasi keanggotaan setelah disetujui.
+- Menggunakan layanan perpustakaan sesuai hak akses sebagai anggota aktif.
+
+### 3.3 Dosen
+
+Dosen dapat:
+
+- Melakukan pendaftaran keanggotaan.
+- Melihat status pendaftaran.
+- Melihat informasi keanggotaan setelah disetujui.
+- Menggunakan layanan perpustakaan sesuai hak akses sebagai anggota aktif.
+
+---
+
+## 4. User dan Member
+
+User dan Member merupakan konsep yang berbeda.
+
+### User
+
+User merupakan akun yang digunakan untuk:
+
+- Login ke sistem.
+- Mengakses fitur sesuai role.
+- Memiliki identitas akun pada sistem.
+
+### Member
+
+Member merupakan data keanggotaan perpustakaan yang memiliki status keanggotaan.
+
+Hubungan konseptual:
+
+```text
+User
+  │
+  └── Member
+       └── Membership Status
+```
+
+Tidak semua User harus langsung menjadi anggota aktif.
+
+Contohnya:
+
+- User baru mendaftar → Member `Pending`
+- Pendaftaran disetujui → Member `Active`
+- Pendaftaran ditolak → Member `Rejected`
+
+---
+
+## 5. Member Type
+
+Pada MVP terdapat dua jenis anggota yang dapat menggunakan layanan peminjaman:
 
 - Mahasiswa
 - Dosen
 
-### Prasyarat
+Mahasiswa dan Dosen memiliki aturan peminjaman yang sama.
 
-- Pengguna belum memiliki akun.
-- Pengguna mengakses halaman registrasi.
-
-### Alur Utama
-
-1. Pengguna membuka halaman registrasi.
-2. Pengguna mengisi formulir pendaftaran.
-3. Pengguna mengirim formulir.
-4. Sistem melakukan validasi data.
-5. Sistem menyimpan data pengguna.
-6. Status akun diubah menjadi **Pending Approval**.
-7. Sistem menampilkan informasi bahwa pendaftaran berhasil dan sedang menunggu persetujuan Administrator.
-
-### Kondisi Akhir
-
-- Data pengguna tersimpan.
-- Status akun adalah **Pending Approval**.
-- Pengguna belum dapat menggunakan layanan perpustakaan.
-
-### Acceptance Criteria
-
-- Seluruh field wajib harus diisi.
-- Email tidak boleh digunakan oleh akun lain.
-- Nomor induk tidak boleh digunakan oleh akun lain.
-- Password memenuhi kebijakan keamanan sistem.
-- Status awal akun adalah **Pending Approval**.
+Tidak terdapat perbedaan batas peminjaman antara Mahasiswa dan Dosen pada MVP.
 
 ---
 
-## FR-MEM-002 — Persetujuan Keanggotaan
+## 6. Registration
 
-### Deskripsi
+Pendaftaran anggota dilakukan secara online melalui sistem.
 
-Administrator dapat menyetujui atau menolak pendaftaran anggota baru.
+Alur pendaftaran:
 
-### Aktor
-
-- Administrator
-
-### Prasyarat
-
-- Administrator telah login.
-- Terdapat pendaftaran dengan status **Pending Approval**.
-
-### Alur Utama
-
-1. Administrator membuka daftar pendaftaran anggota.
-2. Administrator memilih salah satu pendaftaran.
-3. Administrator melakukan verifikasi data.
-4. Administrator memilih aksi:
-   - Setujui
-   - Tolak
-5. Sistem memperbarui status pendaftaran.
-
-### Kondisi Akhir
-
-Apabila disetujui:
-
-- Status akun berubah menjadi **Active**.
-- Pengguna dapat login ke sistem.
-
-Apabila ditolak:
-
-- Status akun berubah menjadi **Rejected**.
-- Pengguna tidak dapat login.
-
-### Acceptance Criteria
-
-- Hanya Administrator yang dapat melakukan persetujuan.
-- Setiap perubahan status harus tersimpan pada sistem.
-- Pengguna dengan status **Rejected** tidak dapat login.
+1. User mengisi formulir pendaftaran.
+2. Sistem menyimpan data pendaftaran.
+3. Status keanggotaan menjadi `Pending`.
+4. Administrator memeriksa data pendaftaran.
+5. Administrator dapat menyetujui atau menolak pendaftaran.
+6. Jika disetujui, status menjadi `Active`.
+7. Jika ditolak, status menjadi `Rejected`.
 
 ---
 
-## FR-MEM-003 — Login
+## 7. Membership Status
 
-### Deskripsi
+Status keanggotaan pada MVP terdiri dari:
 
-Pengguna yang telah memiliki akun aktif dapat masuk ke dalam sistem.
+- `Pending`
+- `Active`
+- `Rejected`
 
-### Aktor
+### 7.1 Pending
 
-- Mahasiswa
-- Dosen
-- Administrator
+Status `Pending` menunjukkan bahwa pendaftaran anggota telah dikirim tetapi belum diproses oleh Administrator.
 
-### Prasyarat
+Anggota dengan status `Pending` belum dapat menggunakan layanan yang mensyaratkan keanggotaan aktif, termasuk peminjaman buku.
 
-- Akun telah berstatus **Active**.
+### 7.2 Active
 
-### Alur Utama
+Status `Active` menunjukkan bahwa pendaftaran anggota telah disetujui oleh Administrator.
 
-1. Pengguna membuka halaman login.
-2. Pengguna memasukkan email dan password.
-3. Sistem melakukan autentikasi.
-4. Sistem membuat sesi login.
-5. Pengguna diarahkan ke dashboard sesuai perannya.
+Anggota dengan status `Active` dapat menggunakan layanan perpustakaan sesuai hak aksesnya.
 
-### Kondisi Akhir
+Anggota `Active` dapat mengajukan peminjaman buku.
 
-Pengguna berhasil masuk ke sistem.
+### 7.3 Rejected
 
-### Acceptance Criteria
+Status `Rejected` menunjukkan bahwa pendaftaran anggota ditolak oleh Administrator.
 
-- Hanya akun berstatus **Active** yang dapat login.
-- Password harus sesuai.
-- Sistem menampilkan pesan yang sesuai apabila autentikasi gagal.
+Anggota dengan status `Rejected` tidak dapat menggunakan layanan yang mensyaratkan keanggotaan aktif.
 
 ---
 
-## FR-MEM-004 — Logout
+## 8. Membership Approval
 
-### Deskripsi
+Administrator bertanggung jawab melakukan verifikasi pendaftaran anggota.
 
-Pengguna dapat mengakhiri sesi penggunaan sistem.
+Administrator dapat:
 
-### Aktor
+- Menyetujui pendaftaran.
+- Menolak pendaftaran.
 
-- Semua pengguna
+Alur status:
 
-### Alur Utama
+```text
+Pending
+   │
+   ├── Active
+   │
+   └── Rejected
+```
 
-1. Pengguna memilih menu Logout.
-2. Sistem menghapus sesi autentikasi.
-3. Sistem mengarahkan pengguna ke halaman login.
-
-### Acceptance Criteria
-
-- Seluruh sesi login dihapus.
-- Pengguna tidak dapat mengakses halaman yang memerlukan autentikasi setelah logout.
-
----
-
-## FR-MEM-005 — Manajemen Pengguna
-
-### Deskripsi
-
-Administrator dapat mengelola seluruh data pengguna.
-
-### Fitur
-
-- Menambah pengguna.
-- Mengubah data pengguna.
-- Menonaktifkan akun.
-- Mengaktifkan kembali akun.
-- Menghapus akun.
-
-### Acceptance Criteria
-
-- Seluruh perubahan tersimpan pada sistem.
-- Hanya Administrator yang memiliki hak akses.
+Tidak terdapat status `Suspended` dalam MVP.
 
 ---
 
-## FR-MEM-006 — Import Data Pengguna
+## 9. Active Member
 
-### Deskripsi
+Hanya anggota dengan status `Active` yang dapat menggunakan layanan peminjaman buku.
 
-Administrator dapat mengimpor data pengguna menggunakan file Microsoft Excel.
+Sebelum membuat pengajuan peminjaman, sistem harus memastikan:
 
-### Acceptance Criteria
+- User memiliki data Member.
+- Status Member adalah `Active`.
 
-- Sistem memvalidasi format file.
-- Sistem menampilkan jumlah data berhasil dan gagal diimpor.
-- Data yang gagal tidak menghentikan proses impor data lainnya.
-
----
-
-## FR-MEM-007 — Pengelolaan Profil
-
-### Deskripsi
-
-Pengguna dapat memperbarui informasi profil pribadinya.
-
-### Acceptance Criteria
-
-- Pengguna hanya dapat mengubah profil miliknya sendiri.
-- Perubahan data langsung tersimpan.
-- Email tetap harus bersifat unik.
+Jika status Member bukan `Active`, pengajuan peminjaman tidak dapat dibuat.
 
 ---
 
-# 6. Business Rules
+## 10. Member Data
 
-## BR-MEM-001 — Persetujuan Keanggotaan
+Data anggota dapat meliputi:
 
-Setiap pendaftaran anggota baru harus melalui proses persetujuan oleh Administrator sebelum akun dapat menggunakan layanan perpustakaan.
+- Nama lengkap.
+- Email.
+- Nomor identitas.
+- Jenis anggota.
+- Nomor telepon.
+- Informasi akademik yang diperlukan.
+- Status keanggotaan.
+- Tanggal pendaftaran.
+- Tanggal persetujuan.
 
----
-
-## BR-MEM-002 — Status Awal Akun
-
-Setiap akun hasil registrasi mandiri memiliki status awal **Pending Approval**.
-
----
-
-## BR-MEM-003 — Hak Akses Berdasarkan Status
-
-Hanya akun dengan status **Active** yang dapat mengakses layanan perpustakaan setelah berhasil login.
+Data final yang diwajibkan mengikuti kebutuhan formulir dan kebijakan perpustakaan.
 
 ---
 
-## BR-MEM-004 — Hak Persetujuan
+## 11. Member Data Management
 
-Proses persetujuan maupun penolakan pendaftaran hanya dapat dilakukan oleh Administrator.
+Administrator dapat mengelola data anggota.
 
----
+Pengelolaan meliputi:
 
-## BR-MEM-005 — Keunikan Data
+- Melihat data anggota.
+- Melihat detail anggota.
+- Memperbarui data anggota.
+- Memeriksa status anggota.
 
-Email dan Nomor Induk (NIM atau NIDN) harus bersifat unik dan tidak boleh digunakan oleh lebih dari satu akun.
-
----
-
-## BR-MEM-006 — Import Data
-
-Administrator dapat menambahkan data anggota melalui proses impor menggunakan file Microsoft Excel.
+Perubahan data harus dilakukan dengan tetap mempertahankan integritas data keanggotaan.
 
 ---
 
-## BR-MEM-007 — Registrasi Mandiri
+## 12. Registration Flow
 
-Mahasiswa dan Dosen melakukan registrasi secara mandiri melalui website.
+Alur pendaftaran anggota:
 
----
-
-## BR-MEM-008 — Perubahan Profil
-
-Pengguna hanya diperbolehkan mengubah data profil miliknya sendiri.
-
-Administrator dapat mengubah data seluruh pengguna.
-
----
-
-## BR-MEM-009 — Penghapusan Akun
-
-Penghapusan akun hanya dapat dilakukan oleh Administrator.
-
-Apabila akun masih memiliki transaksi peminjaman yang belum selesai, sistem harus menolak proses penghapusan.
+```text
+User
+  ↓
+Mengisi Form Pendaftaran
+  ↓
+Submit
+  ↓
+Pending
+  ↓
+Administrator Review
+  ├── Approve → Active
+  └── Reject  → Rejected
+```
 
 ---
 
-## BR-MEM-010 — Penonaktifan Akun
+## 13. Relationship with Borrowing
 
-Administrator dapat menonaktifkan akun tanpa menghapus data pengguna.
+Member Management berhubungan langsung dengan Borrowing Management.
 
-Akun yang berstatus nonaktif tidak dapat melakukan login.
+Hanya anggota `Active` yang dapat membuat pengajuan peminjaman.
 
----
+Selain status keanggotaan, pengajuan peminjaman juga harus memenuhi aturan lain yang ditentukan oleh modul Borrowing Management.
 
-# 7. Data Dictionary
+Contoh:
 
-## Data Anggota
-
-| Field | Tipe | Wajib | Keterangan |
-|--------|------|:----:|------------|
-| id | UUID / BigInt | ✅ | Primary Key |
-| full_name | String | ✅ | Nama lengkap pengguna |
-| email | String | ✅ | Digunakan untuk login |
-| password | String (Hash) | ✅ | Password terenkripsi |
-| role | Enum | ✅ | Administrator, Mahasiswa, Dosen |
-| identity_number | String | ✅ | NIM atau NIDN |
-| faculty | String | ✅ | Fakultas |
-| study_program | String | ✅ | Program Studi |
-| phone_number | String | ❌ | Nomor telepon |
-| address | Text | ❌ | Alamat |
-| profile_photo | String | ❌ | Lokasi file foto profil |
-| account_status | Enum | ✅ | Pending Approval, Active, Rejected, Inactive |
-| created_at | Timestamp | ✅ | Waktu pembuatan data |
-| updated_at | Timestamp | ✅ | Waktu perubahan terakhir |
+- Anggota tidak memiliki keterlambatan yang menghalangi peminjaman.
+- Tidak melebihi batas pengajuan yang ditentukan.
+- Buku tersedia.
 
 ---
 
-## Role
+## 14. Business Rules
 
-| Role | Deskripsi |
-|------|-----------|
-| Administrator | Mengelola seluruh sistem |
-| Mahasiswa | Menggunakan layanan perpustakaan |
-| Dosen | Menggunakan layanan perpustakaan |
-
----
-
-## Status Akun
-
-| Status | Deskripsi |
-|--------|-----------|
-| Pending Approval | Menunggu persetujuan Administrator |
-| Active | Akun dapat menggunakan seluruh layanan sesuai hak akses |
-| Rejected | Pendaftaran ditolak |
-| Inactive | Akun dinonaktifkan oleh Administrator |
+| No | Aturan |
+|----|--------|
+| 1 | User dan Member merupakan konsep yang berbeda. |
+| 2 | Jenis anggota pada MVP terdiri dari Mahasiswa dan Dosen. |
+| 3 | Mahasiswa dan Dosen memiliki aturan peminjaman yang sama. |
+| 4 | Pendaftaran baru memiliki status `Pending`. |
+| 5 | Administrator dapat menyetujui pendaftaran menjadi `Active`. |
+| 6 | Administrator dapat menolak pendaftaran menjadi `Rejected`. |
+| 7 | Tidak terdapat status `Suspended` dalam MVP. |
+| 8 | Hanya Member dengan status `Active` yang dapat mengajukan peminjaman. |
+| 9 | Member dengan status `Pending` tidak dapat mengajukan peminjaman. |
+| 10 | Member dengan status `Rejected` tidak dapat mengajukan peminjaman. |
+| 11 | Administrator bertanggung jawab melakukan approval keanggotaan. |
+| 12 | Perbedaan aturan peminjaman antara Mahasiswa dan Dosen tidak diterapkan pada MVP. |
 
 ---
 
-# 8. Definition of Done
+## 15. Features Outside MVP
 
-Dokumen ini dinyatakan selesai apabila seluruh kriteria berikut telah terpenuhi.
+Fitur berikut tidak termasuk dalam MVP:
 
-| No | Kriteria | Status |
-|----|----------|:------:|
-| 1 | Tujuan modul telah didefinisikan | ☑ |
-| 2 | Aktor telah diidentifikasi | ☑ |
-| 3 | Ruang lingkup modul telah ditentukan | ☑ |
-| 4 | Functional Requirement telah ditulis | ☑ |
-| 5 | Business Rule telah ditulis | ☑ |
-| 6 | Tidak terdapat asumsi teknis (database, API, framework) | ☑ |
-| 7 | Tidak terdapat Open Question | ☑ |
-| 8 | Siap dilakukan review bersama client | ☑ |
+- Status `Suspended`.
+- Perbedaan kebijakan peminjaman antara Mahasiswa dan Dosen.
+- Membership tier atau level keanggotaan.
+- Membership renewal otomatis.
+- Integrasi SSO.
+- Sinkronisasi otomatis dengan sistem akademik.
+- Integrasi kartu anggota fisik atau digital khusus.
 
----
-
-# 9. Riwayat Keputusan
-
-| ID | Keputusan |
-|----|-----------|
-| D-MEM-001 | Sistem menyediakan registrasi anggota secara mandiri. |
-| D-MEM-002 | Setiap pendaftaran harus melalui persetujuan Administrator. |
-| D-MEM-003 | Sistem menyediakan tiga peran pengguna, yaitu Administrator, Mahasiswa, dan Dosen. |
-| D-MEM-004 | Integrasi Single Sign-On (SSO) tidak termasuk ruang lingkup MVP. |
-| D-MEM-005 | Administrator dapat melakukan impor data pengguna melalui file Microsoft Excel. |
+Fitur tersebut dapat dipertimbangkan pada fase pengembangan berikutnya.
 
 ---
 
-# 10. Catatan
+## 16. Acceptance Criteria
 
-Dokumen ini mendefinisikan kebutuhan bisnis untuk modul Manajemen Anggota.
+Modul Member Management dianggap memenuhi requirement apabila:
 
-Dokumen ini tidak membahas desain antarmuka, struktur basis data, implementasi API, maupun detail teknis lainnya. Seluruh aspek teknis akan dijelaskan pada dokumen tahap desain dan pengembangan.
+### Registration
+
+- [ ] User dapat melakukan pendaftaran keanggotaan.
+- [ ] Pendaftaran baru memiliki status `Pending`.
+- [ ] Administrator dapat melihat pendaftaran anggota.
+- [ ] Administrator dapat memeriksa data pendaftaran.
+- [ ] Administrator dapat menyetujui pendaftaran.
+- [ ] Administrator dapat menolak pendaftaran.
+
+### Membership Status
+
+- [ ] Sistem memiliki status `Pending`.
+- [ ] Sistem memiliki status `Active`.
+- [ ] Sistem memiliki status `Rejected`.
+- [ ] Sistem tidak menggunakan status `Suspended` pada MVP.
+
+### Active Member
+
+- [ ] Hanya anggota `Active` yang dapat mengajukan peminjaman.
+- [ ] Anggota `Pending` tidak dapat mengajukan peminjaman.
+- [ ] Anggota `Rejected` tidak dapat mengajukan peminjaman.
+
+### Member Type
+
+- [ ] Sistem mendukung Mahasiswa.
+- [ ] Sistem mendukung Dosen.
+- [ ] Mahasiswa dan Dosen memiliki aturan peminjaman yang sama.
+
+### Member Management
+
+- [ ] Administrator dapat melihat data anggota.
+- [ ] Administrator dapat melihat detail anggota.
+- [ ] Administrator dapat memperbarui data anggota.
+
+---
+
+## 17. Status Requirement
+
+| Item | Status |
+|------|--------|
+| Business Requirement | Resolved |
+| Functional Requirement | Resolved |
+| Business Rules | Resolved |
+| Acceptance Criteria | Defined |
+| Client Review | Pending |
+| Client Approval | Pending |

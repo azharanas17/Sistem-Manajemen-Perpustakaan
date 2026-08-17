@@ -1,320 +1,393 @@
 # Announcement Management
 
-# 1. Tujuan
+## 1. Overview
 
-Modul Announcement Management bertanggung jawab untuk mengelola dan menyampaikan informasi resmi perpustakaan kepada pengguna sistem.
+Announcement Management merupakan modul yang digunakan untuk mengelola dan menyampaikan informasi resmi perpustakaan kepada seluruh pengguna sistem.
 
-Modul ini memungkinkan Administrator membuat dan mempublikasikan pengumuman yang dapat dibaca oleh Mahasiswa dan Dosen melalui website.
+Pengumuman dapat digunakan untuk menyampaikan:
+
+- Informasi layanan perpustakaan.
+- Perubahan jadwal layanan.
+- Informasi kegiatan.
+- Informasi kebijakan.
+- Pemberitahuan penting lainnya.
+
+Seluruh pengumuman pada MVP ditujukan kepada semua pengguna sistem.
 
 ---
 
-# 2. Istilah yang Digunakan
+## 2. Tujuan
 
-## Pengumuman
+Modul Announcement Management bertujuan untuk:
 
-Pengumuman adalah informasi resmi yang diterbitkan oleh Administrator untuk disampaikan kepada pengguna perpustakaan.
+- Menyediakan media penyampaian informasi resmi perpustakaan.
+- Memudahkan Administrator membuat dan mengelola pengumuman.
+- Memastikan pengguna dapat mengetahui informasi terbaru perpustakaan.
+- Mengatur periode publikasi pengumuman.
+- Menyediakan pengelolaan arsip pengumuman tanpa harus menghapus data.
+
+---
+
+## 3. Aktor
+
+### 3.1 Administrator
+
+Administrator bertanggung jawab untuk mengelola pengumuman.
+
+Administrator dapat:
+
+- Membuat pengumuman.
+- Mengubah pengumuman.
+- Mengatur kategori pengumuman.
+- Menentukan tanggal mulai pengumuman.
+- Menentukan tanggal berakhir pengumuman.
+- Menambahkan gambar atau lampiran apabila diperlukan.
+- Menerbitkan pengumuman.
+- Mengarsipkan pengumuman.
+- Menghapus pengumuman.
+- Melihat daftar pengumuman.
+- Melihat detail pengumuman.
+
+### 3.2 Mahasiswa
+
+Mahasiswa dapat:
+
+- Melihat daftar pengumuman.
+- Membuka detail pengumuman.
+- Membaca pengumuman yang sedang aktif.
+
+### 3.3 Dosen
+
+Dosen memiliki akses pengumuman yang sama dengan Mahasiswa.
+
+Dosen dapat:
+
+- Melihat daftar pengumuman.
+- Membuka detail pengumuman.
+- Membaca pengumuman yang sedang aktif.
+
+---
+
+## 4. Target Pengumuman
+
+Pada MVP, seluruh pengumuman selalu ditujukan kepada:
+
+**Semua pengguna sistem.**
+
+Tidak terdapat mekanisme untuk menargetkan pengumuman hanya kepada:
+
+- Mahasiswa.
+- Dosen.
+- Kelompok pengguna tertentu.
+
+Dengan demikian, setiap pengumuman yang dipublikasikan akan tersedia untuk seluruh pengguna yang dapat mengakses sistem.
+
+---
+
+## 5. Announcement Information
+
+Setiap pengumuman memiliki informasi yang digunakan untuk menampilkan konten kepada pengguna.
+
+Informasi pengumuman meliputi:
+
+- Judul.
+- Isi pengumuman.
+- Kategori.
+- Tanggal mulai.
+- Tanggal berakhir.
+- Gambar atau lampiran apabila tersedia.
+- Status pengumuman.
+
+---
+
+## 6. Category
+
+Setiap pengumuman wajib memiliki kategori.
+
+Kategori digunakan untuk membantu pengelompokan dan pengelolaan informasi.
+
+Kategori dikelola oleh Administrator.
+
+Administrator dapat:
+
+- Membuat kategori.
+- Mengubah kategori.
+- Mengelola kategori yang digunakan oleh pengumuman.
+
+Contoh kategori:
+
+- Informasi.
+- Kegiatan.
+- Layanan.
+- Akademik.
+- Pengumuman Umum.
+
+Daftar kategori di atas merupakan contoh dan dapat disesuaikan dengan kebutuhan perpustakaan.
+
+---
+
+## 7. Publication Period
+
+Setiap pengumuman memiliki:
+
+- Tanggal mulai.
+- Tanggal berakhir.
+
+Tanggal mulai menentukan kapan pengumuman mulai ditampilkan kepada pengguna.
+
+Tanggal berakhir menentukan kapan periode publikasi pengumuman berakhir.
+
+Pengumuman hanya dianggap aktif selama berada dalam periode publikasinya.
 
 Contoh:
 
-* Informasi perubahan jam layanan.
-* Informasi penutupan perpustakaan.
-* Informasi kegiatan perpustakaan.
-* Informasi layanan baru.
-* Pengumuman akademik yang berkaitan dengan layanan perpustakaan.
+- Tanggal mulai: 17 Agustus 2026
+- Tanggal berakhir: 24 Agustus 2026
+
+Pengumuman aktif selama periode tersebut.
 
 ---
 
-## Status Pengumuman
+## 8. Announcement Status
 
-Status Pengumuman menunjukkan kondisi publikasi suatu pengumuman.
+Pengumuman memiliki status yang digunakan untuk mengelola siklus hidupnya.
 
-Status yang digunakan:
+Status utama:
 
-* Draft
-* Published
-* Archived
+- `Draft`
+- `Published`
+- `Archived`
 
----
+### 8.1 Draft
 
-# 3. Aktor
+Pengumuman masih dalam proses penyusunan dan belum ditampilkan kepada pengguna.
 
-| Aktor         | Deskripsi                                                        |
-| ------------- | ---------------------------------------------------------------- |
-| Administrator | Membuat, mengubah, mempublikasikan, dan mengarsipkan pengumuman. |
-| Mahasiswa     | Melihat pengumuman yang telah dipublikasikan.                    |
-| Dosen         | Melihat pengumuman yang telah dipublikasikan.                    |
+### 8.2 Published
 
----
+Pengumuman telah diterbitkan dan dapat ditampilkan kepada pengguna sesuai periode publikasinya.
 
-# 4. Tujuan Bisnis
+### 8.3 Archived
 
-Implementasi modul ini bertujuan untuk:
+Pengumuman telah diarsipkan dan tidak lagi ditampilkan sebagai pengumuman aktif.
 
-* Menyediakan media informasi resmi perpustakaan.
-* Memudahkan Administrator menyampaikan informasi kepada pengguna.
-* Mengurangi ketergantungan terhadap penyampaian informasi secara manual.
-* Menyediakan arsip informasi yang dapat diakses kembali oleh pengguna.
+Data pengumuman tetap disimpan di dalam sistem.
 
 ---
 
-# 5. Ruang Lingkup
+## 9. Active Announcement
 
-Modul Announcement Management mencakup:
+Pengumuman dapat ditampilkan kepada pengguna apabila memenuhi kondisi publikasi.
 
-* Membuat pengumuman.
-* Mengubah pengumuman.
-* Menghapus pengumuman.
-* Menyimpan pengumuman sebagai Draft.
-* Mempublikasikan pengumuman.
-* Mengarsipkan pengumuman.
-* Melihat daftar pengumuman.
-* Melihat detail pengumuman.
-* Menampilkan pengumuman terbaru.
+Pengumuman harus:
 
----
+- Berstatus `Published`.
+- Sudah mencapai tanggal mulai.
+- Belum melewati tanggal berakhir.
+- Tidak berstatus `Archived`.
 
-# 6. Functional Requirements
-
-## FR-ANN-001 — Membuat Pengumuman
-
-### Tujuan
-
-Administrator dapat membuat pengumuman baru.
-
-### Aktor
-
-* Administrator
-
-### Acceptance Criteria
-
-* Administrator dapat membuat pengumuman.
-* Pengumuman dapat disimpan sebagai Draft.
-* Pengumuman memiliki judul dan isi.
-* Sistem mencatat waktu pembuatan pengumuman.
+Dengan demikian, pengumuman yang berada di luar periode publikasinya tidak ditampilkan sebagai pengumuman aktif.
 
 ---
 
-## FR-ANN-002 — Mengubah Pengumuman
+## 10. Announcement Detail
 
-### Tujuan
-
-Administrator dapat mengubah pengumuman yang telah dibuat.
-
-### Acceptance Criteria
-
-* Administrator dapat mengubah judul.
-* Administrator dapat mengubah isi.
-* Administrator dapat mengubah informasi pendukung pengumuman.
-* Perubahan tersimpan di sistem.
-
----
-
-## FR-ANN-003 — Mempublikasikan Pengumuman
-
-### Tujuan
-
-Administrator dapat membuat pengumuman tersedia untuk pengguna.
-
-### Acceptance Criteria
-
-* Administrator dapat mengubah status Draft menjadi Published.
-* Pengumuman dengan status Published dapat dilihat oleh pengguna.
-* Pengumuman yang belum dipublikasikan tidak muncul pada daftar pengumuman publik.
-
----
-
-## FR-ANN-004 — Mengarsipkan Pengumuman
-
-### Tujuan
-
-Administrator dapat mengarsipkan pengumuman yang sudah tidak relevan sebagai informasi aktif.
-
-### Acceptance Criteria
-
-* Administrator dapat mengubah status Published menjadi Archived.
-* Pengumuman Archived tidak ditampilkan sebagai pengumuman aktif.
-* Data pengumuman tetap tersimpan di sistem.
-
----
-
-## FR-ANN-005 — Menghapus Pengumuman
-
-### Tujuan
-
-Administrator dapat menghapus pengumuman apabila diperlukan.
-
-### Acceptance Criteria
-
-* Administrator dapat menghapus pengumuman.
-* Penghapusan dilakukan oleh Administrator.
-* Pengumuman yang telah dihapus tidak dapat ditampilkan kepada pengguna.
-
----
-
-## FR-ANN-006 — Melihat Daftar Pengumuman
-
-### Tujuan
-
-Pengguna dapat melihat pengumuman yang telah dipublikasikan.
-
-### Aktor
-
-* Mahasiswa
-* Dosen
-
-### Acceptance Criteria
-
-* Pengguna dapat melihat daftar pengumuman Published.
-* Pengumuman terbaru ditampilkan terlebih dahulu.
-* Pengumuman Archived tidak ditampilkan sebagai pengumuman aktif.
-
----
-
-## FR-ANN-007 — Melihat Detail Pengumuman
-
-### Tujuan
-
-Pengguna dapat membaca isi lengkap sebuah pengumuman.
-
-### Acceptance Criteria
+Pengguna dapat membuka halaman detail pengumuman untuk membaca informasi secara lengkap.
 
 Halaman detail menampilkan:
 
-* Judul
-* Isi pengumuman
-* Tanggal publikasi
-* Informasi pendukung apabila tersedia
+- Judul.
+- Kategori.
+- Isi pengumuman.
+- Tanggal mulai.
+- Tanggal berakhir.
+- Gambar apabila tersedia.
+- Lampiran apabila tersedia.
 
 ---
 
-# 7. Informasi Pengumuman
+## 11. Image and Attachment
 
-Setiap Pengumuman harus mampu menyimpan informasi berikut.
+Pengumuman dapat memiliki gambar atau lampiran.
 
-| Informasi          | Wajib | Keterangan                                |
-| ------------------ | :---: | ----------------------------------------- |
-| Judul              |   ✅   | Judul pengumuman.                         |
-| Isi                |   ✅   | Isi lengkap pengumuman.                   |
-| Status             |   ✅   | Draft, Published, atau Archived.          |
-| Tanggal Publikasi  |   ❌   | Tanggal ketika pengumuman dipublikasikan. |
-| Gambar             |   ❌   | Gambar pendukung apabila diperlukan.      |
-| Lampiran           |   ❌   | File pendukung apabila diperlukan.        |
-| Tanggal Dibuat     |   ✅   | Waktu pengumuman dibuat.                  |
-| Tanggal Diperbarui |   ✅   | Waktu terakhir pengumuman diperbarui.     |
+Gambar atau lampiran:
+
+- Bersifat opsional.
+- Tidak wajib disertakan ketika membuat pengumuman.
+- Dapat digunakan untuk mendukung informasi yang disampaikan.
+
+Pengumuman tetap dapat diterbitkan tanpa gambar atau lampiran.
 
 ---
 
-# 8. Business Rules
+## 12. Archive
 
-## BR-ANN-001 — Pengelolaan Pengumuman
+Archive digunakan untuk menyembunyikan pengumuman dari daftar pengumuman aktif tanpa menghapus data dari sistem.
 
-Pengumuman hanya dapat dikelola oleh Administrator.
+Ketika pengumuman diarsipkan:
 
----
+- Pengumuman tidak lagi ditampilkan sebagai pengumuman aktif.
+- Data pengumuman tetap tersimpan.
+- Administrator masih dapat melihat data pengumuman yang telah diarsipkan.
+- Pengumuman dapat digunakan sebagai riwayat informasi.
 
-## BR-ANN-002 — Status Draft
-
-Pengumuman dengan status Draft hanya dapat dilihat dan dikelola oleh Administrator.
-
-Pengumuman Draft tidak ditampilkan kepada pengguna umum.
-
----
-
-## BR-ANN-003 — Status Published
-
-Pengumuman dengan status Published dapat dilihat oleh Mahasiswa dan Dosen.
+Archive berbeda dengan Delete.
 
 ---
 
-## BR-ANN-004 — Status Archived
+## 13. Delete
 
-Pengumuman dengan status Archived tidak ditampilkan sebagai pengumuman aktif.
+Delete digunakan untuk menghapus pengumuman dari sistem.
 
-Data pengumuman tetap disimpan sebagai arsip.
+Berbeda dengan Archive, Delete menghapus data pengumuman secara permanen.
 
----
+Setelah pengumuman dihapus:
 
-## BR-ANN-005 — Tanggal Publikasi
+- Data pengumuman tidak lagi tersedia.
+- Pengumuman tidak dapat ditampilkan kepada pengguna.
+- Data tidak dianggap sebagai arsip pengumuman.
 
-Tanggal publikasi dicatat ketika pengumuman dipublikasikan.
-
----
-
-## BR-ANN-006 — Urutan Pengumuman
-
-Daftar pengumuman aktif ditampilkan berdasarkan tanggal publikasi terbaru.
+Administrator harus berhati-hati ketika menggunakan fungsi Delete karena data akan benar-benar dihapus.
 
 ---
 
-## BR-ANN-007 — Isi Pengumuman
+## 14. Announcement Flow
 
-Pengumuman harus memiliki judul dan isi sebelum dapat dipublikasikan.
+Alur pengelolaan pengumuman:
 
----
-
-# 9. Status Pengumuman
-
-| Status    | Deskripsi                                             | Terlihat Pengguna |
-| --------- | ----------------------------------------------------- | :---------------: |
-| Draft     | Pengumuman sedang disiapkan dan belum dipublikasikan. |         ❌         |
-| Published | Pengumuman telah dipublikasikan dan aktif.            |         ✅         |
-| Archived  | Pengumuman telah diarsipkan dan tidak lagi aktif.     |         ❌         |
-
----
-
-# 10. Alur Pengelolaan Pengumuman
-
-Alur utama pengelolaan pengumuman:
-
-```text
-Draft
-  │
-  ▼
-Published
-  │
-  ▼
-Archived
-```
-
-Administrator dapat membuat pengumuman baru dalam status Draft.
-
-Setelah informasi dianggap siap, Administrator dapat mempublikasikan pengumuman.
-
-Setelah tidak lagi relevan sebagai informasi aktif, Administrator dapat mengarsipkan pengumuman.
+1. Administrator membuat pengumuman.
+2. Administrator mengisi judul dan isi.
+3. Administrator memilih kategori.
+4. Administrator menentukan tanggal mulai.
+5. Administrator menentukan tanggal berakhir.
+6. Administrator dapat menambahkan gambar atau lampiran.
+7. Pengumuman disimpan sebagai `Draft`.
+8. Administrator menerbitkan pengumuman.
+9. Pengumuman menjadi `Published`.
+10. Pengumuman ditampilkan kepada pengguna selama periode publikasi.
+11. Setelah periode berakhir, pengumuman tidak lagi ditampilkan sebagai pengumuman aktif.
+12. Administrator dapat mengarsipkan pengumuman.
+13. Administrator dapat menghapus pengumuman apabila memang diperlukan.
 
 ---
 
-# 11. Definition of Done
+## 15. Announcement Visibility
 
-Dokumen Announcement Management dapat dinyatakan **Approved** apabila:
+Pengguna hanya dapat melihat pengumuman yang tersedia untuk mereka.
 
-| No | Kriteria                                                     | Status |
-| -- | ------------------------------------------------------------ | :----: |
-| 1  | Tujuan modul telah didefinisikan                             |    ☑   |
-| 2  | Istilah bisnis telah didefinisikan                           |    ☑   |
-| 3  | Aktor telah diidentifikasi                                   |    ☑   |
-| 4  | Ruang lingkup telah ditentukan                               |    ☑   |
-| 5  | Functional Requirement telah ditulis                         |    ☑   |
-| 6  | Informasi Pengumuman telah didefinisikan                     |    ☑   |
-| 7  | Business Rule telah ditulis                                  |    ☑   |
-| 8  | Status Pengumuman telah didefinisikan                        |    ☑   |
-| 9  | Alur pengelolaan telah didefinisikan                         |    ☑   |
-| 10 | Tidak terdapat detail implementasi teknis                    |    ☑   |
-| 11 | Seluruh Open Question telah dikonfirmasi oleh client         |    ☐   |
-| 12 | Dokumen siap digunakan sebagai dasar desain dan pengembangan |    ☐   |
+Pada MVP, seluruh pengumuman memiliki target:
+
+**Semua pengguna.**
+
+Tidak terdapat segmentasi berdasarkan role.
+
+Contoh:
+
+- Pengumuman: "Perpustakaan Tutup pada 17 Agustus"
+- Target: Semua pengguna
+- Mahasiswa: Dapat melihat
+- Dosen: Dapat melihat
+- Administrator: Dapat melihat
 
 ---
 
-# 12. Open Questions
+## 16. Business Rules
 
-Bagian ini berisi keputusan bisnis yang masih memerlukan konfirmasi dari pihak perpustakaan.
+| No | Aturan |
+|----|--------|
+| 1 | Pengumuman ditujukan kepada seluruh pengguna pada MVP. |
+| 2 | Pengumuman tidak memiliki target audience khusus berdasarkan role. |
+| 3 | Setiap pengumuman wajib memiliki kategori. |
+| 4 | Setiap pengumuman wajib memiliki tanggal mulai. |
+| 5 | Setiap pengumuman wajib memiliki tanggal berakhir. |
+| 6 | Gambar atau lampiran bersifat opsional. |
+| 7 | Pengumuman berstatus `Draft` tidak ditampilkan kepada pengguna. |
+| 8 | Pengumuman berstatus `Published` ditampilkan sesuai periode publikasinya. |
+| 9 | Ketika tanggal berakhir tercapai, status pengumuman otomatis berubah menjadi `Archived`. |
+| 10 | Pengumuman berstatus `Archived` tidak ditampilkan sebagai pengumuman aktif. |
+| 11 | Pengumuman `Archived` dapat dikembalikan menjadi `Published` oleh Administrator dengan memperbarui tanggal publikasi sesuai kebutuhan. |
+| 12 | Archive mempertahankan data pengumuman di dalam sistem. |
+| 13 | Delete menghapus data pengumuman secara permanen. |
+| 14 | Delete wajib melalui konfirmasi Administrator sebelum data dihapus. |
+| 15 | Administrator bertanggung jawab terhadap pengelolaan pengumuman. |
+| 16 | Pengguna dapat membaca pengumuman yang sedang aktif. |
 
-| ID         | Pertanyaan                                                                     | Status |
-| ---------- | ------------------------------------------------------------------------------ | :----: |
-| OQ-ANN-001 | Apakah pengumuman perlu memiliki kategori?                                     |    ⏳   |
-| OQ-ANN-002 | Apakah pengumuman perlu memiliki tanggal mulai dan tanggal berakhir publikasi? |    ⏳   |
-| OQ-ANN-003 | Apakah pengumuman dapat ditujukan hanya kepada Mahasiswa atau Dosen tertentu?  |    ⏳   |
-| OQ-ANN-004 | Apakah gambar diperlukan sebagai bagian dari pengumuman?                       |    ⏳   |
-| OQ-ANN-005 | Apakah lampiran file diperlukan dalam MVP?                                     |    ⏳   |
+---
 
-> Open Question tidak dianggap sebagai requirement final sebelum mendapatkan konfirmasi dari pihak perpustakaan.
+## 17. Features Outside MVP
+
+Fitur berikut tidak termasuk dalam Announcement Management MVP:
+
+- Target pengumuman berdasarkan Mahasiswa atau Dosen.
+- Target pengumuman berdasarkan kelompok pengguna tertentu.
+- Notifikasi email otomatis.
+- Push notification.
+- Notifikasi berdasarkan preferensi pengguna.
+- Penjadwalan publikasi yang lebih kompleks.
+
+Fitur tersebut dapat dipertimbangkan pada fase pengembangan berikutnya.
+
+---
+
+## 18. Acceptance Criteria
+
+Modul Announcement Management dianggap memenuhi requirement apabila:
+
+### Announcement
+
+- [ ] Administrator dapat membuat pengumuman.
+- [ ] Administrator dapat mengubah pengumuman.
+- [ ] Administrator dapat menghapus pengumuman.
+- [ ] Administrator dapat mengarsipkan pengumuman.
+- [ ] Administrator dapat melihat pengumuman yang telah diarsipkan.
+
+### Category
+
+- [ ] Setiap pengumuman memiliki kategori.
+- [ ] Administrator dapat mengelola kategori pengumuman.
+
+### Publication Period
+
+- [ ] Administrator dapat menentukan tanggal mulai.
+- [ ] Administrator dapat menentukan tanggal berakhir.
+- [ ] Pengumuman hanya ditampilkan selama periode publikasi.
+- [ ] Pengumuman yang telah melewati tanggal berakhir tidak ditampilkan sebagai pengumuman aktif.
+
+### Target Audience
+
+- [ ] Setiap pengumuman ditujukan kepada semua pengguna.
+- [ ] Sistem tidak membatasi pengumuman berdasarkan role pada MVP.
+
+### Image and Attachment
+
+- [ ] Administrator dapat menambahkan gambar apabila diperlukan.
+- [ ] Administrator dapat menambahkan lampiran apabila diperlukan.
+- [ ] Pengumuman dapat diterbitkan tanpa gambar atau lampiran.
+
+### Status dan Archive
+
+- [ ] Pengumuman berstatus `Draft` tidak ditampilkan kepada pengguna.
+- [ ] Pengumuman berstatus `Published` ditampilkan selama periode publikasi.
+- [ ] Sistem otomatis mengubah status menjadi `Archived` ketika tanggal berakhir tercapai.
+- [ ] Pengumuman `Archived` tidak ditampilkan sebagai pengumuman aktif.
+- [ ] Administrator dapat mengubah pengumuman `Archived` menjadi `Published`.
+- [ ] Administrator harus memperbarui tanggal publikasi sebelum menerbitkan kembali pengumuman `Archived`.
+- [ ] Data pengumuman tetap tersimpan setelah status berubah menjadi `Archived`.
+
+### Delete
+
+- [ ] Administrator dapat menghapus pengumuman.
+- [ ] Sistem meminta konfirmasi sebelum penghapusan permanen.
+- [ ] Setelah dikonfirmasi, data pengumuman dihapus secara permanen.
+
+---
+
+## 19. Status Requirement
+
+| Item | Status |
+|------|--------|
+| Business Requirement | Resolved |
+| Functional Requirement | Resolved |
+| Business Rules | Resolved |
+| Acceptance Criteria | Defined |
+| Client Review | Pending |
+| Client Approval | Pending |

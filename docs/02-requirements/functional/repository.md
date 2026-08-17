@@ -1,594 +1,458 @@
 # Repository Management
 
-# 1. Tujuan
+## 1. Overview
 
-Modul Repository Management bertanggung jawab untuk mengelola koleksi karya ilmiah dan dokumen akademik yang disimpan secara digital oleh perpustakaan.
+Repository Management merupakan modul yang digunakan untuk mengelola koleksi karya ilmiah perpustakaan serta menyediakan akses kepada pengguna terhadap informasi dan file karya ilmiah tersebut.
 
-Modul ini memungkinkan pengguna menemukan dan melihat informasi mengenai karya ilmiah melalui katalog repository, membaca abstrak, serta mengajukan akses terhadap dokumen lengkap apabila akses terhadap file dibatasi.
+Pada MVP, repository mencakup:
 
-Modul ini juga menyediakan fasilitas bagi Administrator untuk mengelola metadata dan file repository.
+- Skripsi
+- Tesis
+- Disertasi
 
----
+Repository dapat diakses oleh Mahasiswa dan Dosen yang telah login.
 
-# 2. Istilah yang Digunakan
-
-## Repository
-
-Repository adalah kumpulan karya ilmiah atau dokumen akademik yang dikelola dan disediakan oleh perpustakaan dalam bentuk digital.
+Administrator memiliki tanggung jawab untuk mengelola metadata, melakukan review, mengunggah file, serta mengelola permintaan akses terhadap file repository.
 
 ---
 
-## Item Repository
+# 2. Tujuan
 
-Item Repository adalah satu karya ilmiah atau dokumen akademik yang terdaftar di dalam repository.
+Modul Repository Management bertujuan untuk:
 
-Contoh:
-
-* Skripsi
-* Tesis
-* Disertasi
-* Artikel ilmiah
-* Karya ilmiah lainnya
-
----
-
-## Metadata
-
-Metadata adalah informasi yang menjelaskan suatu Item Repository.
-
-Metadata dapat mencakup:
-
-* Judul
-* Penulis
-* Tahun
-* Program Studi
-* Fakultas
-* Jenis karya ilmiah
-* Abstrak
-* dan informasi bibliografi lainnya.
-
----
-
-## File Repository
-
-File Repository adalah dokumen digital lengkap yang berkaitan dengan suatu Item Repository.
-
-File dapat berupa PDF atau format dokumen lain sesuai kebijakan perpustakaan.
-
----
-
-## Permintaan Akses
-
-Permintaan Akses adalah pengajuan yang dilakukan oleh pengguna untuk memperoleh akses terhadap File Repository yang tidak tersedia untuk publik.
+- Menyediakan katalog karya ilmiah secara digital.
+- Memudahkan pengguna menemukan karya ilmiah yang tersedia.
+- Menampilkan metadata dan abstrak karya ilmiah.
+- Membatasi akses terhadap file lengkap berdasarkan persetujuan Administrator.
+- Membantu Administrator mengelola koleksi repository.
+- Menjaga agar metadata repository telah diperiksa sebelum dipublikasikan.
 
 ---
 
 # 3. Aktor
 
-| Aktor         | Deskripsi                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------- |
-| Administrator | Mengelola metadata, abstrak, file, dan permintaan akses repository.                             |
-| Mahasiswa     | Mencari repository, melihat metadata dan abstrak, serta mengajukan akses terhadap file lengkap. |
-| Dosen         | Mencari repository, melihat metadata dan abstrak, serta mengajukan akses terhadap file lengkap. |
+## 3.1 Administrator
+
+Administrator bertanggung jawab terhadap pengelolaan repository.
+
+Administrator dapat:
+
+- Membuat data repository.
+- Mengubah metadata repository.
+- Memasukkan abstrak.
+- Mengunggah file repository.
+- Melakukan review metadata.
+- Menyetujui repository untuk dipublikasikan.
+- Mengelola status publikasi repository.
+- Melihat permintaan akses repository.
+- Menyetujui permintaan akses.
+- Menolak permintaan akses.
+- Memberikan alasan penolakan.
+- Melihat riwayat akses repository.
+
+## 3.2 Mahasiswa
+
+Mahasiswa dapat:
+
+- Melihat daftar repository.
+- Mencari repository.
+- Melihat detail repository.
+- Membaca metadata.
+- Membaca abstrak.
+- Mengajukan permintaan akses terhadap file lengkap.
+- Mengakses file setelah permintaan disetujui dan selama masa akses masih berlaku.
+
+## 3.3 Dosen
+
+Dosen memiliki akses repository yang sama dengan Mahasiswa.
+
+Dosen dapat:
+
+- Melihat daftar repository.
+- Mencari repository.
+- Melihat detail repository.
+- Membaca metadata.
+- Membaca abstrak.
+- Mengajukan permintaan akses terhadap file lengkap.
+- Mengakses file setelah permintaan disetujui dan selama masa akses masih berlaku.
 
 ---
 
-# 4. Tujuan Bisnis
+# 4. Scope Repository MVP
 
-Implementasi modul ini bertujuan untuk:
+Jenis karya ilmiah yang termasuk dalam Repository MVP adalah:
 
-* Menyediakan katalog karya ilmiah yang mudah diakses.
-* Memudahkan pengguna menemukan karya ilmiah berdasarkan informasi bibliografi.
-* Menampilkan informasi karya ilmiah sebelum pengguna meminta akses terhadap dokumen lengkap.
-* Menjaga kontrol perpustakaan terhadap distribusi file karya ilmiah.
-* Menyediakan arsip digital karya ilmiah yang dikelola secara terpusat.
+1. Skripsi
+2. Tesis
+3. Disertasi
 
----
+Jenis karya ilmiah lainnya tidak termasuk dalam scope MVP.
 
-# 5. Ruang Lingkup
-
-Modul Repository Management mencakup:
-
-* Pengelolaan metadata repository.
-* Pengelolaan abstrak.
-* Pengelolaan file repository.
-* Pencarian repository.
-* Filter repository.
-* Halaman detail repository.
-* Pengajuan akses file repository.
-* Persetujuan atau penolakan permintaan akses oleh Administrator.
-* Pengunduhan file setelah akses disetujui.
-* Pengelolaan status publikasi repository.
+Jenis karya ilmiah tambahan dapat dipertimbangkan pada fase pengembangan berikutnya.
 
 ---
 
-# 6. Functional Requirements
+# 5. Repository Information
 
-## FR-REP-001 — Kelola Item Repository
+Setiap repository memiliki halaman detail yang menampilkan informasi karya ilmiah kepada pengguna.
 
-### Tujuan
+Halaman detail harus menampilkan informasi yang tersedia sebelum pengguna dapat mengakses file lengkap.
 
-Administrator dapat menambahkan, melihat, mengubah, dan mengelola Item Repository.
+Informasi repository mencakup:
 
-### Aktor
+- Judul.
+- Penulis.
+- Jenis karya ilmiah.
+- Tahun.
+- Program studi atau informasi akademik terkait apabila digunakan.
+- Pembimbing apabila tersedia.
+- Abstrak.
+- Metadata lainnya yang ditentukan oleh Administrator.
 
-* Administrator
-
-### Acceptance Criteria
-
-* Administrator dapat menambahkan Item Repository.
-* Administrator dapat mengubah metadata Item Repository.
-* Administrator dapat melihat detail Item Repository.
-* Administrator dapat mengelola status publikasi Item Repository.
-
----
-
-## FR-REP-002 — Kelola Metadata Repository
-
-### Deskripsi
-
-Administrator dapat memasukkan dan mengubah metadata yang berkaitan dengan Item Repository.
-
-### Acceptance Criteria
-
-* Metadata dapat disimpan dan diperbarui.
-* Metadata ditampilkan pada halaman detail repository.
-* Metadata dapat digunakan sebagai informasi pencarian.
+Metadata yang digunakan harus dapat dikelola oleh Administrator.
 
 ---
 
-## FR-REP-003 — Kelola Abstrak
+# 6. Abstract
 
-### Deskripsi
+Abstrak merupakan bagian dari informasi repository yang dapat dibaca langsung oleh pengguna.
 
-Abstrak harus disimpan langsung di dalam sistem agar dapat ditampilkan pada halaman detail repository.
+Abstrak:
 
-### Acceptance Criteria
+- Disimpan langsung di dalam sistem.
+- Dapat ditampilkan pada halaman detail repository.
+- Tidak memerlukan pengguna mengunduh file lengkap untuk membacanya.
+- Dikelola oleh Administrator.
 
-* Administrator dapat memasukkan abstrak secara langsung.
-* Administrator dapat mengubah abstrak.
-* Abstrak dapat dilihat oleh pengguna yang memiliki akses terhadap halaman repository.
-* Pengguna tidak perlu mengunduh file untuk membaca abstrak.
-
----
-
-## FR-REP-004 — Kelola File Repository
-
-### Deskripsi
-
-Administrator dapat mengunggah file lengkap yang berkaitan dengan Item Repository.
-
-### Acceptance Criteria
-
-* Administrator dapat mengunggah file.
-* Administrator dapat mengganti file apabila diperlukan.
-* File terkait dengan Item Repository tertentu.
-* File tidak otomatis dapat diakses oleh seluruh pengguna apabila repository memiliki pembatasan akses.
+Dengan demikian, pengguna tetap dapat memahami isi umum karya ilmiah sebelum mengajukan akses terhadap file lengkap.
 
 ---
 
-## FR-REP-005 — Pencarian Repository
+# 7. Repository File
 
-### Deskripsi
+File lengkap karya ilmiah disimpan dalam repository dan tidak langsung tersedia untuk diunduh oleh seluruh pengguna.
 
-Pengguna dapat mencari Item Repository melalui katalog repository.
+File repository hanya dapat diakses setelah permintaan akses disetujui oleh Administrator.
 
-Pencarian dilakukan berdasarkan informasi metadata yang relevan.
-
-### Aktor
-
-* Mahasiswa
-* Dosen
-
-### Acceptance Criteria
-
-Pengguna dapat mencari repository berdasarkan informasi seperti:
-
-* Judul
-* Penulis
-* Tahun
-* Program Studi
-* Fakultas
-* Jenis karya ilmiah
+Pada MVP, hanya Administrator yang dapat mengunggah file repository ke dalam sistem.
 
 ---
 
-## FR-REP-006 — Filter Repository
+# 8. Upload Repository
 
-### Deskripsi
+Mahasiswa dan Dosen tidak dapat mengunggah file repository secara langsung melalui sistem.
 
-Pengguna dapat melakukan filter terhadap daftar repository.
+Jika Mahasiswa atau Dosen memiliki karya ilmiah yang perlu dimasukkan ke repository, file dapat dikirimkan kepada Administrator melalui email atau media komunikasi di luar sistem.
 
-### Acceptance Criteria
+Administrator kemudian:
 
-Filter dapat digunakan untuk mempersempit hasil pencarian berdasarkan metadata yang tersedia.
+1. Menerima file.
+2. Memeriksa file dan informasi terkait.
+3. Memasukkan metadata ke dalam sistem.
+4. Memasukkan abstrak.
+5. Mengunggah file repository.
+6. Melakukan review metadata.
+7. Mempublikasikan repository apabila telah memenuhi persyaratan.
 
 ---
 
-## FR-REP-007 — Halaman Detail Repository
+# 9. Metadata Review
 
-### Deskripsi
+Administrator wajib memeriksa metadata sebelum repository dipublikasikan.
 
-Setiap Item Repository memiliki halaman detail yang menampilkan informasi lengkap sebelum pengguna mengakses file.
+Repository tidak boleh dipublikasikan sebelum metadata selesai diperiksa dan disetujui oleh Administrator.
 
-### Acceptance Criteria
+Proses umum:
+
+1. Data repository dibuat.
+2. Metadata dimasukkan.
+3. Abstrak dimasukkan.
+4. File diunggah.
+5. Administrator melakukan review.
+6. Administrator menyetujui metadata.
+7. Repository dapat dipublikasikan.
+
+---
+
+# 10. Repository Publication
+
+Repository memiliki status publikasi yang digunakan untuk menentukan apakah repository dapat ditampilkan kepada pengguna.
+
+Status yang digunakan:
+
+- `Draft`
+- `Published`
+- `Archived`
+
+## 10.1 Draft
+
+Repository masih dalam proses pengelolaan dan belum dipublikasikan kepada pengguna.
+
+## 10.2 Published
+
+Repository telah melalui proses review Administrator dan dapat ditampilkan kepada pengguna.
+
+## 10.3 Archived
+
+Repository tidak lagi ditampilkan sebagai repository aktif, tetapi data tetap tersimpan di sistem.
+
+---
+
+# 11. Repository Detail Page
+
+Pengguna dapat membuka halaman detail repository yang telah dipublikasikan.
 
 Halaman detail menampilkan:
 
-* Judul
-* Penulis
-* Tahun
-* Program Studi
-* Fakultas
-* Jenis karya ilmiah
-* Abstrak
-* Informasi metadata lainnya
-* Status akses terhadap file
+- Informasi bibliografis.
+- Metadata.
+- Abstrak.
+- Informasi jenis karya ilmiah.
+- Informasi penulis.
+- Informasi tahun.
+- Status ketersediaan file.
+
+File lengkap tidak langsung dapat diunduh hanya karena repository dapat dilihat.
+
+Pengguna harus mengajukan akses terlebih dahulu.
 
 ---
 
-## FR-REP-008 — Pengajuan Akses File
+# 12. Repository Access Request
 
-### Tujuan
+Pengguna dapat mengajukan permintaan akses terhadap file lengkap repository.
 
-Pengguna dapat meminta akses terhadap File Repository yang dibatasi.
+Alur:
 
-### Aktor
-
-* Mahasiswa
-* Dosen
-
-### Acceptance Criteria
-
-* Pengguna harus login sebelum mengajukan akses.
-* Pengguna dapat mengajukan permintaan akses dari halaman detail repository.
-* Sistem mencatat permintaan akses.
-* Permintaan memiliki status yang dapat dipantau.
+1. Pengguna membuka detail repository.
+2. Pengguna membaca metadata dan abstrak.
+3. Pengguna mengajukan permintaan akses.
+4. Permintaan masuk ke Administrator.
+5. Administrator melakukan review.
+6. Administrator menyetujui atau menolak permintaan.
+7. Jika disetujui, pengguna mendapatkan akses terhadap file selama masa akses berlaku.
+8. Jika ditolak, pengguna dapat mengajukan kembali.
 
 ---
 
-## FR-REP-009 — Persetujuan Akses
+# 13. Access Request Status
 
-### Tujuan
+Permintaan akses repository memiliki status:
 
-Administrator dapat menyetujui atau menolak permintaan akses terhadap File Repository.
+- `Pending`
+- `Approved`
+- `Rejected`
 
-### Acceptance Criteria
+## 13.1 Pending
 
-* Administrator dapat melihat daftar permintaan akses.
-* Administrator dapat menyetujui permintaan.
-* Administrator dapat menolak permintaan.
-* Status permintaan diperbarui setelah keputusan dibuat.
+Permintaan telah dibuat oleh pengguna tetapi belum diproses Administrator.
 
----
+## 13.2 Approved
 
-## FR-REP-010 — Akses File Setelah Persetujuan
+Administrator menyetujui permintaan akses.
 
-### Deskripsi
+Pengguna mendapatkan akses terhadap file repository selama periode akses yang ditentukan.
 
-File Repository dapat diakses atau diunduh oleh pengguna setelah permintaan aksesnya disetujui.
+## 13.3 Rejected
 
-### Acceptance Criteria
+Administrator menolak permintaan akses.
 
-* Pengguna yang disetujui dapat mengakses file.
-* Pengguna yang belum disetujui tidak dapat mengakses file terbatas.
-* Pengguna yang ditolak tidak dapat mengakses file tersebut.
+Pengguna dapat mengajukan permintaan akses kembali.
 
 ---
 
-## FR-REP-011 — Riwayat Permintaan Akses
+# 14. Access Approval
 
-### Deskripsi
+Semua file repository membutuhkan persetujuan Administrator sebelum dapat diunduh.
 
-Sistem menyimpan riwayat permintaan akses repository.
+Administrator dapat menyetujui permintaan akses setelah melakukan review.
 
-### Acceptance Criteria
+Ketika permintaan disetujui:
 
-* Setiap permintaan memiliki identitas dan waktu pengajuan.
-* Keputusan Administrator tercatat.
-* Riwayat tidak dihapus hanya karena permintaan telah selesai diproses.
-
----
-
-# 7. Informasi Repository
-
-Setiap Item Repository harus mampu menyimpan informasi berikut.
-
-| Informasi       | Wajib | Keterangan                                                                      |
-| --------------- | :---: | ------------------------------------------------------------------------------- |
-| Judul           |   ✅   | Judul karya ilmiah atau dokumen.                                                |
-| Penulis         |   ✅   | Penulis karya ilmiah.                                                           |
-| Tahun           |   ✅   | Tahun publikasi atau penyelesaian karya.                                        |
-| Jenis Karya     |   ✅   | Jenis dokumen, misalnya Skripsi, Tesis, atau Disertasi.                         |
-| Program Studi   |   ❌   | Program studi yang terkait dengan karya ilmiah.                                 |
-| Fakultas        |   ❌   | Fakultas yang terkait dengan karya ilmiah.                                      |
-| Abstrak         |   ✅   | Ringkasan isi karya ilmiah yang ditampilkan pada halaman detail.                |
-| Kata Kunci      |   ❌   | Kata kunci yang berkaitan dengan karya ilmiah.                                  |
-| File Repository |   ❌   | File digital lengkap apabila tersedia.                                          |
-| Status Akses    |   ✅   | Menentukan apakah file dapat diakses secara publik atau memerlukan persetujuan. |
-
-> Status dan field di atas dapat disesuaikan berdasarkan kebijakan dan kebutuhan perpustakaan setelah dilakukan review terhadap data repository yang sebenarnya.
+- Status permintaan menjadi `Approved`.
+- Sistem mencatat waktu persetujuan.
+- Sistem menentukan periode akses.
+- Pengguna dapat mengakses file selama periode tersebut.
 
 ---
 
-# 8. Business Rules
+# 15. Access Period
 
-## BR-REP-001 — Metadata dan File
+Akses terhadap file repository berlaku selama:
 
-Metadata repository merupakan bagian yang terpisah dari File Repository.
+**7 hari**
 
-Sebuah Item Repository tetap dapat ditampilkan meskipun File Repository belum tersedia.
+Masa akses dihitung sejak permintaan akses disetujui.
 
----
+Contoh:
 
-## BR-REP-002 — Abstrak
+- Permintaan disetujui: 17 Agustus 2026
+- Masa akses: 7 hari
+- Akses berakhir: 24 Agustus 2026
 
-Abstrak harus disimpan langsung di dalam sistem dan dapat ditampilkan pada halaman detail repository.
-
----
-
-## BR-REP-003 — Akses Terbatas
-
-File Repository tidak harus dapat diakses oleh seluruh pengguna.
-
-Administrator dapat menetapkan bahwa sebuah file memerlukan persetujuan sebelum dapat diakses.
+Setelah masa akses berakhir, pengguna tidak lagi dapat mengakses file melalui persetujuan tersebut.
 
 ---
 
-## BR-REP-004 — Pengguna Harus Login
+# 16. Rejected Access Request
 
-Pengguna harus memiliki akun dan telah mendapatkan akses sebagai anggota perpustakaan untuk mengajukan permintaan terhadap File Repository yang dibatasi.
+Jika Administrator menolak permintaan akses:
 
----
+- Status menjadi `Rejected`.
+- Pengguna tidak dapat mengakses file melalui permintaan tersebut.
+- Pengguna dapat mengajukan permintaan akses kembali.
 
-## BR-REP-005 — Persetujuan Administrator
+Penolakan dapat disertai alasan dari Administrator.
 
-Permintaan akses terhadap File Repository yang dibatasi harus diproses oleh Administrator.
-
----
-
-## BR-REP-006 — Akses Setelah Persetujuan
-
-Pengguna hanya dapat mengakses File Repository setelah permintaan aksesnya disetujui oleh Administrator.
+Alasan penolakan digunakan untuk memberikan informasi kepada pengguna mengenai keputusan Administrator.
 
 ---
 
-## BR-REP-007 — Penolakan Akses
+# 17. File Size Limit
 
-Permintaan yang ditolak tidak memberikan hak akses terhadap File Repository.
+Ukuran maksimum file repository adalah:
 
----
+**100 MB per file.**
 
-## BR-REP-008 — Pengelolaan File
-
-File Repository hanya dapat diunggah atau dikelola oleh Administrator melalui sistem.
+File yang melebihi batas tersebut tidak dapat diunggah ke dalam sistem.
 
 ---
 
-## BR-REP-009 — Pengiriman File di Luar Sistem
+# 18. Repository Access Security
 
-Apabila mahasiswa atau dosen memiliki file karya ilmiah yang perlu dimasukkan ke dalam repository, file dapat dikirimkan kepada Administrator melalui email atau media komunikasi lain di luar sistem.
+File repository tidak boleh tersedia sebagai file publik yang dapat diakses tanpa proses otorisasi.
 
-Administrator kemudian bertanggung jawab mengunggah file tersebut ke dalam sistem.
+Akses file harus memperhatikan:
 
-Proses pengiriman file oleh pengguna melalui email tidak termasuk dalam integrasi sistem MVP.
+- Status repository.
+- Status permintaan akses.
+- Masa berlaku akses.
+- Identitas pengguna yang mendapatkan persetujuan.
 
----
-
-## BR-REP-010 — Satu Item Repository
-
-Satu Item Repository merepresentasikan satu karya ilmiah atau dokumen akademik.
-
----
-
-## BR-REP-011 — Riwayat Permintaan Akses
-
-Riwayat permintaan akses tidak boleh dihapus hanya karena permintaan telah disetujui atau ditolak.
+Pengguna yang belum mendapatkan persetujuan Administrator tidak dapat mengakses file lengkap repository.
 
 ---
 
-# 9. Status Item Repository
+# 19. Repository Flow
 
-Item Repository memiliki status publikasi yang menentukan apakah item dapat ditampilkan kepada pengguna.
+Alur pengelolaan repository:
 
-| Status    | Deskripsi                                                                               |
-| --------- | --------------------------------------------------------------------------------------- |
-| Draft     | Repository sedang disiapkan dan belum ditampilkan kepada pengguna.                      |
-| Published | Repository telah dipublikasikan dan dapat ditemukan melalui katalog.                    |
-| Archived  | Repository tidak lagi ditampilkan sebagai koleksi aktif, tetapi datanya tetap disimpan. |
-
----
-
-# 10. Status Permintaan Akses
-
-Setiap Permintaan Akses memiliki salah satu status berikut.
-
-| Status               | Deskripsi                                                |
-| -------------------- | -------------------------------------------------------- |
-| Menunggu Persetujuan | Permintaan baru dibuat dan belum diproses Administrator. |
-| Disetujui            | Administrator menyetujui akses terhadap file.            |
-| Ditolak              | Administrator menolak permintaan akses.                  |
-| Dibatalkan           | Permintaan dibatalkan sebelum diproses.                  |
+1. Administrator menerima karya ilmiah.
+2. Administrator memasukkan metadata.
+3. Administrator memasukkan abstrak.
+4. Administrator mengunggah file.
+5. Administrator melakukan review metadata.
+6. Repository dipublikasikan.
+7. Pengguna membuka repository.
+8. Pengguna membaca metadata dan abstrak.
+9. Pengguna mengajukan akses file.
+10. Administrator melakukan review permintaan.
+11. Administrator menyetujui atau menolak.
+12. Jika disetujui, pengguna mendapatkan akses selama 7 hari.
+13. Setelah 7 hari, akses berakhir.
 
 ---
 
-# 11. Alur Akses Repository
+# 20. Business Rules
 
-## 11.1 Repository Tanpa Pembatasan
-
-Apabila sebuah repository ditetapkan dapat diakses secara publik:
-
-```text
-Pengguna
-   │
-   ▼
-Katalog Repository
-   │
-   ▼
-Halaman Detail
-   │
-   ▼
-Metadata + Abstrak
-   │
-   ▼
-Akses File
-```
-
----
-
-## 11.2 Repository Dengan Pembatasan Akses
-
-Untuk repository yang membutuhkan persetujuan:
-
-```text
-Pengguna
-   │
-   ▼
-Katalog Repository
-   │
-   ▼
-Halaman Detail
-   │
-   ├── Metadata
-   │
-   └── Abstrak
-          │
-          ▼
-   Ajukan Akses File
-          │
-          ▼
- Menunggu Persetujuan
-          │
-      ┌───┴───┐
-      ▼       ▼
- Disetujui   Ditolak
-      │
-      ▼
- Akses File
-```
+| No | Aturan |
+|----|--------|
+| 1 | Repository MVP terdiri dari Skripsi, Tesis, dan Disertasi. |
+| 2 | Repository hanya dapat diakses oleh pengguna yang telah login. |
+| 3 | Halaman detail repository menampilkan metadata dan abstrak. |
+| 4 | Abstrak disimpan langsung di dalam sistem. |
+| 5 | File lengkap tidak langsung dapat diunduh oleh pengguna. |
+| 6 | Semua file repository membutuhkan persetujuan Administrator sebelum dapat diakses. |
+| 7 | Hanya Administrator yang dapat mengunggah file repository pada MVP. |
+| 8 | Mahasiswa dan Dosen tidak dapat mengunggah file repository secara langsung melalui sistem. |
+| 9 | File dapat dikirim kepada Administrator melalui email atau media komunikasi di luar sistem. |
+| 10 | Administrator wajib memeriksa metadata sebelum repository dipublikasikan. |
+| 11 | Repository harus melalui proses review sebelum berstatus `Published`. |
+| 12 | Pengguna harus mengajukan permintaan akses untuk mengakses file lengkap. |
+| 13 | Permintaan akses dapat berstatus `Pending`, `Approved`, atau `Rejected`. |
+| 14 | Permintaan akses yang disetujui memberikan akses selama 7 hari. |
+| 15 | Setelah masa akses berakhir, akses terhadap file melalui persetujuan tersebut berakhir. |
+| 16 | Jika permintaan akses ditolak, pengguna dapat mengajukan kembali. |
+| 17 | Ukuran maksimum file repository adalah 100 MB. |
+| 18 | Pengguna yang tidak memiliki persetujuan aktif tidak dapat mengakses file lengkap. |
 
 ---
 
-# 12. Alur Pengelolaan File
+# 21. Features Outside MVP
 
-Proses pengelolaan file pada MVP dilakukan oleh Administrator.
+Fitur berikut tidak termasuk dalam Repository MVP:
 
-```text
-Karya Ilmiah
-     │
-     ▼
-Mahasiswa / Dosen
-     │
-     │  Email / komunikasi eksternal
-     ▼
-Administrator
-     │
-     ▼
-Upload File
-     │
-     ▼
-Item Repository
-     │
-     ▼
-File Repository
-```
+- Upload repository mandiri oleh Mahasiswa.
+- Upload repository mandiri oleh Dosen.
+- Integrasi submission repository melalui sistem.
+- Persetujuan otomatis.
+- Download tanpa approval Administrator.
+- Batas download berdasarkan jumlah download.
+- Sistem pembayaran untuk akses repository.
 
-Sistem tidak perlu menyediakan fitur upload file repository oleh Mahasiswa atau Dosen pada MVP.
+Fitur tersebut dapat dipertimbangkan pada fase pengembangan berikutnya.
 
 ---
 
-# 13. Aturan Pengelolaan File
+# 22. Acceptance Criteria
 
-## BR-REP-012 — Upload File
+Modul Repository Management dianggap memenuhi requirement apabila:
 
-Hanya Administrator yang dapat mengunggah File Repository melalui sistem.
+## Repository
 
----
+- [ ] Administrator dapat membuat data repository.
+- [ ] Administrator dapat mengubah metadata repository.
+- [ ] Administrator dapat memasukkan abstrak.
+- [ ] Repository mendukung jenis Skripsi, Tesis, dan Disertasi.
+- [ ] Administrator dapat mengunggah file repository.
+- [ ] Ukuran file maksimum adalah 100 MB.
 
-## BR-REP-013 — File Tidak Tersedia
+## Metadata
 
-Item Repository tetap dapat dipublikasikan apabila metadata dan abstrak telah tersedia meskipun file lengkap belum diunggah.
+- [ ] Metadata dapat ditampilkan pada halaman detail repository.
+- [ ] Abstrak dapat ditampilkan pada halaman detail repository.
+- [ ] Metadata harus diperiksa Administrator sebelum repository dipublikasikan.
+- [ ] Repository yang belum disetujui tidak dapat dipublikasikan sebagai repository aktif.
 
----
+## Publication
 
-## BR-REP-014 — Penggantian File
+- [ ] Administrator dapat mempublikasikan repository setelah metadata disetujui.
+- [ ] Repository yang dipublikasikan dapat ditemukan oleh pengguna.
+- [ ] Repository dapat diarsipkan tanpa menghapus data.
 
-Administrator dapat mengganti File Repository apabila diperlukan.
+## Access Request
 
-Penggantian file tidak mengubah identitas Item Repository.
+- [ ] Pengguna dapat mengajukan permintaan akses terhadap file.
+- [ ] Administrator dapat melihat permintaan akses.
+- [ ] Administrator dapat menyetujui permintaan akses.
+- [ ] Administrator dapat menolak permintaan akses.
+- [ ] Permintaan yang ditolak dapat diajukan kembali oleh pengguna.
+- [ ] Alasan penolakan dapat dicatat.
 
----
+## File Access
 
-# 14. Fitur di Luar MVP
+- [ ] File tidak dapat diakses sebelum permintaan disetujui.
+- [ ] File dapat diakses setelah permintaan disetujui.
+- [ ] Akses berlaku selama 7 hari.
+- [ ] Akses berakhir setelah masa akses selesai.
+- [ ] Pengguna tanpa akses aktif tidak dapat mengakses file lengkap.
 
-Fitur berikut tidak termasuk dalam ruang lingkup MVP dan dapat dipertimbangkan untuk pengembangan berikutnya:
+## Upload
 
-* Upload repository secara mandiri oleh Mahasiswa atau Dosen.
-* Integrasi pengiriman file melalui email secara otomatis.
-* Notifikasi otomatis melalui email.
-* Digital Rights Management.
-* Statistik unduhan repository.
-* Versioning file repository.
-* Integrasi dengan repository eksternal.
-* Full-text search di dalam dokumen PDF.
-
----
-
-# 15. Open Questions
-
-Bagian ini berisi keputusan yang masih memerlukan konfirmasi dari pihak perpustakaan.
-
-| ID         | Pertanyaan                                                                                                             | Status |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------- | :----: |
-| OQ-REP-001 | Jenis karya ilmiah apa saja yang akan dikelola pada MVP?                                                               |    ⏳   |
-| OQ-REP-002 | Metadata wajib apa saja yang harus tersedia untuk setiap jenis karya ilmiah?                                           |    ⏳   |
-| OQ-REP-003 | Apakah seluruh repository harus memerlukan persetujuan untuk mengakses file, atau sebagian dapat dibuka secara publik? |    ⏳   |
-| OQ-REP-004 | Apakah Administrator perlu memberikan alasan ketika menolak permintaan akses?                                          |    ⏳   |
-| OQ-REP-005 | Apakah pengguna dapat mengajukan kembali akses setelah permintaannya ditolak?                                          |    ⏳   |
-| OQ-REP-006 | Apakah terdapat pembatasan khusus terhadap jenis pengguna tertentu dalam mengakses file repository?                    |    ⏳   |
-| OQ-REP-007 | Format file apa saja yang diperbolehkan untuk File Repository?                                                         |    ⏳   |
-| OQ-REP-008 | Apakah file repository harus memiliki batas ukuran maksimum?                                                           |    ⏳   |
-
-> Open Question tidak boleh dianggap sebagai requirement final sebelum mendapatkan konfirmasi dari pihak perpustakaan.
+- [ ] Mahasiswa tidak dapat mengunggah file repository secara langsung.
+- [ ] Dosen tidak dapat mengunggah file repository secara langsung.
+- [ ] Administrator dapat mengunggah file repository.
+- [ ] File yang melebihi 100 MB ditolak oleh sistem.
 
 ---
 
-# 16. Definition of Done
+# 23. Status Requirement
 
-Dokumen Repository Management dapat dinyatakan **Approved** apabila:
-
-| No | Kriteria                                                                   | Status |
-| -- | -------------------------------------------------------------------------- | :----: |
-| 1  | Tujuan modul telah didefinisikan                                           |    ☑   |
-| 2  | Aktor telah diidentifikasi                                                 |    ☑   |
-| 3  | Ruang lingkup telah ditentukan                                             |    ☑   |
-| 4  | Functional Requirement telah ditulis                                       |    ☑   |
-| 5  | Informasi Repository telah didefinisikan                                   |    ☑   |
-| 6  | Business Rule telah ditulis                                                |    ☑   |
-| 7  | Status Item Repository telah didefinisikan                                 |    ☑   |
-| 8  | Status Permintaan Akses telah didefinisikan                                |    ☑   |
-| 9  | Alur akses repository telah didefinisikan                                  |    ☑   |
-| 10 | Mekanisme pengelolaan file telah didefinisikan                             |    ☑   |
-| 11 | Fitur di luar MVP telah dicatat                                            |    ☑   |
-| 12 | Seluruh Open Question telah dikonfirmasi oleh client                       |    ☐   |
-| 13 | Tidak terdapat detail implementasi teknis yang tercampur dalam requirement |    ☑   |
-| 14 | Dokumen siap digunakan sebagai dasar desain dan pengembangan               |    ☐   |
-
-```
-
-### Status saat ini
-
-Saya akan memberi status **`Draft — Pending Client Confirmation`**, bukan `Approved`.
-
-Dan ada satu hal yang menurut saya bagus dari struktur ini: **kita tidak mencampurkan proses "user mengirim file ke admin melalui email" dengan sistem.** Itu adalah proses operasional di luar aplikasi, sedangkan aplikasi hanya menangani bagian setelah Admin menerima file.
-
-Dengan demikian boundary MVP-nya menjadi jelas:
-
-**Mahasiswa/Dosen → email → Admin → upload ke sistem → Repository**
-
-bukan:
-
-**Mahasiswa/Dosen → upload langsung → Repository**.
-
-Itu akan sangat membantu nanti ketika kita menentukan scope development dan estimasi pengerjaan.
-```
+| Item | Status |
+|------|--------|
+| Business Requirement | Resolved |
+| Functional Requirement | Resolved |
+| Business Rules | Resolved |
+| Acceptance Criteria | Defined |
+| Client Review | Pending |
+| Client Approval | Pending |

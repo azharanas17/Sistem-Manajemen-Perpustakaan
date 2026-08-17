@@ -1,472 +1,421 @@
----
-title: Book Management
-module: Functional Requirements
-code: FR-BOOK
-version: 0.1.0
-status: Draft
----
-
 # Book Management
 
-# 1. Tujuan
+## 1. Overview
 
-Modul Book Management bertanggung jawab untuk mengelola seluruh data koleksi buku yang dimiliki perpustakaan, termasuk data bibliografi, data eksemplar buku, kategori, penulis, penerbit, serta lokasi penyimpanan buku.
+Book Management merupakan modul yang digunakan untuk mengelola data koleksi buku perpustakaan.
 
-Modul ini memastikan seluruh koleksi perpustakaan terdokumentasi dengan baik sehingga dapat digunakan oleh modul lain, seperti Katalog Online dan Peminjaman Buku.
+Modul ini membedakan antara:
 
-## Istilah yang Digunakan
+- **Judul Buku**
+- **Eksemplar Buku**
 
-Untuk menghindari ambiguitas, dokumen ini menggunakan istilah berikut.
+Satu Judul Buku dapat memiliki lebih dari satu Eksemplar.
 
-### Judul Buku
+Judul Buku merepresentasikan informasi bibliografis buku, sedangkan Eksemplar merepresentasikan salinan fisik yang dimiliki perpustakaan.
 
-Judul Buku adalah informasi bibliografi suatu buku, seperti judul, penulis, penerbit, tahun terbit, ISBN, kategori, dan informasi deskriptif lainnya.
+---
 
-Satu Judul Buku dapat memiliki satu atau lebih Eksemplar Buku.
+## 2. Tujuan
+
+Modul Book Management bertujuan untuk:
+
+- Mengelola data Judul Buku.
+- Mengelola Eksemplar Buku.
+- Memisahkan data bibliografis dari inventory fisik.
+- Mengetahui jumlah Eksemplar yang dimiliki untuk suatu Judul Buku.
+- Mengetahui ketersediaan Eksemplar.
+- Mendukung proses katalog dan peminjaman.
+
+---
+
+## 3. Aktor
+
+### 3.1 Administrator
+
+Administrator bertanggung jawab terhadap pengelolaan koleksi buku.
+
+Administrator dapat:
+
+- Membuat Judul Buku.
+- Mengubah data Judul Buku.
+- Mengubah status publikasi Judul Buku.
+- Menambahkan Eksemplar.
+- Melihat daftar Eksemplar.
+- Melihat status Eksemplar.
+- Mengelola informasi lokasi rak.
+- Mengelola informasi bibliografis buku.
+- Mengelola kategori buku.
+
+### 3.2 Mahasiswa
+
+Mahasiswa dapat:
+
+- Melihat Judul Buku yang berstatus `Published`.
+- Melihat informasi buku melalui katalog.
+- Mengajukan peminjaman Judul Buku yang tersedia.
+
+Mahasiswa tidak memilih Eksemplar tertentu.
+
+### 3.3 Dosen
+
+Dosen memiliki hak dan aturan yang sama dengan Mahasiswa.
+
+Dosen dapat:
+
+- Melihat Judul Buku yang berstatus `Published`.
+- Melihat informasi buku melalui katalog.
+- Mengajukan peminjaman Judul Buku yang tersedia.
+
+Dosen tidak memilih Eksemplar tertentu.
+
+---
+
+## 4. Book Title
+
+Judul Buku merupakan entitas utama yang merepresentasikan sebuah judul koleksi.
+
+Satu Judul Buku dapat memiliki banyak Eksemplar.
 
 Contoh:
 
-- Clean Code
-- Laskar Pelangi
-- Atomic Habits
+```text
+Judul Buku:
+Laravel untuk Pemula
+
+Eksemplar:
+- Copy 001
+- Copy 002
+- Copy 003
+```
+
+Informasi Judul Buku dapat meliputi:
+
+- Judul.
+- Penulis.
+- Penerbit.
+- Tahun terbit.
+- ISBN apabila tersedia.
+- Kategori.
+- Lokasi rak.
+- Status publikasi.
 
 ---
 
-### Eksemplar Buku
+## 5. Book Title Status
 
-Eksemplar Buku adalah salinan fisik dari suatu Judul Buku yang tersedia di perpustakaan.
+Judul Buku memiliki status:
 
-Setiap Eksemplar Buku memiliki identitas unik sehingga status ketersediaannya dapat dikelola secara individual.
+- `Published`
+- `Unpublished`
+
+### 5.1 Published
+
+Judul Buku dengan status `Published` dapat ditampilkan pada katalog kepada pengguna yang telah login.
+
+Judul Buku dapat diajukan untuk peminjaman apabila memiliki Eksemplar dengan status `Available`.
+
+### 5.2 Unpublished
+
+Judul Buku dengan status `Unpublished` tidak ditampilkan sebagai koleksi aktif dalam katalog pengguna.
+
+Judul Buku `Unpublished` tidak dapat diajukan untuk peminjaman.
+
+---
+
+## 6. Book Copy / Eksemplar
+
+Eksemplar merupakan salinan fisik dari suatu Judul Buku.
+
+Satu Judul Buku dapat memiliki lebih dari satu Eksemplar.
+
+Setiap Eksemplar memiliki identitas tersendiri sehingga Administrator dapat membedakan setiap salinan fisik.
 
 Contoh:
 
-| Judul Buku | Kode Eksemplar |
-|------------|----------------|
-| Clean Code | CC-001 |
-| Clean Code | CC-002 |
-| Clean Code | CC-003 |
+```text
+Judul Buku:
+Database Design
 
-Pada modul peminjaman, objek yang dipinjam oleh anggota perpustakaan adalah **Eksemplar Buku**, bukan **Judul Buku**.
-
----
-
-# 2. Aktor
-
-| Aktor | Deskripsi |
-|--------|-----------|
-| Administrator | Mengelola seluruh data koleksi buku, kategori, penulis, penerbit, dan lokasi rak. |
-| Mahasiswa | Melihat informasi koleksi buku melalui katalog online. |
-| Dosen | Melihat informasi koleksi buku melalui katalog online. |
+Eksemplar:
+- Database Design / Copy 001
+- Database Design / Copy 002
+- Database Design / Copy 003
+```
 
 ---
 
-# 3. Tujuan Bisnis
+## 7. Book Copy Status
 
-Implementasi modul ini bertujuan untuk:
+Status Eksemplar pada MVP terdiri dari:
 
-- Menyediakan data koleksi buku yang akurat.
-- Mempermudah pengelolaan koleksi perpustakaan.
-- Memudahkan pengguna menemukan buku yang dibutuhkan.
-- Menjadi sumber data utama bagi proses peminjaman buku.
+- `Available`
+- `Borrowed`
 
----
+### 7.1 Available
 
-# 4. Ruang Lingkup
+Eksemplar dengan status `Available` tersedia untuk digunakan dalam proses peminjaman.
 
-Modul ini mencakup fitur-fitur berikut:
+### 7.2 Borrowed
 
-- Pengelolaan data buku.
-- Pengelolaan eksemplar buku.
-- Pengelolaan kategori buku.
-- Pengelolaan penulis.
-- Pengelolaan penerbit.
-- Pengelolaan lokasi rak.
-- Import data buku menggunakan file Microsoft Excel.
-- Pencarian buku.
-- Filter koleksi buku.
-- Melihat detail buku.
+Eksemplar dengan status `Borrowed` sedang berada dalam status peminjaman.
 
----
+Perubahan status secara umum:
 
-# 5. Functional Requirements
+```text
+Available → Borrowed → Available
+```
 
-## FR-BOOK-001 — Kelola Data Buku
+Eksemplar menjadi `Borrowed` setelah buku diambil oleh anggota.
 
-### Tujuan
-
-Administrator dapat menambahkan, mengubah, melihat, dan menghapus data bibliografi buku.
-
-### Deskripsi
-
-Sistem menyediakan fasilitas untuk mengelola informasi utama sebuah judul buku.
-
-### Aktor
-
-- Administrator
-
-### Acceptance Criteria
-
-- Administrator dapat menambah data buku.
-- Administrator dapat mengubah data buku.
-- Administrator dapat melihat detail buku.
-- Administrator dapat menghapus data buku apabila tidak memiliki eksemplar.
+Eksemplar kembali menjadi `Available` setelah Administrator mencatat pengembalian.
 
 ---
 
-## FR-BOOK-002 — Kelola Eksemplar Buku
+## 8. Book Title and Book Copy Relationship
 
-### Tujuan
+Hubungan antara Judul Buku dan Eksemplar:
 
-Administrator dapat mengelola setiap eksemplar fisik dari suatu judul buku.
+```text
+Book Title
+    │
+    ├── Book Copy 001
+    ├── Book Copy 002
+    └── Book Copy 003
+```
 
-### Deskripsi
+Satu Judul Buku:
 
-Satu judul buku dapat memiliki satu atau lebih eksemplar.
+- Dapat memiliki satu Eksemplar.
+- Dapat memiliki banyak Eksemplar.
 
-Setiap eksemplar memiliki identitas unik sehingga status ketersediaannya dapat dilacak secara individual.
-
-### Aktor
-
-- Administrator
-
-### Acceptance Criteria
-
-- Sistem mendukung lebih dari satu eksemplar untuk setiap judul buku.
-- Setiap eksemplar memiliki identitas yang unik.
-- Status setiap eksemplar dapat dikelola secara terpisah.
+Setiap Eksemplar hanya terkait dengan satu Judul Buku.
 
 ---
 
-## FR-BOOK-003 — Kelola Penulis
+## 9. Book Location
 
-### Deskripsi
+Setiap Judul Buku memiliki satu lokasi rak.
 
-Administrator dapat mengelola data penulis buku.
+Eksemplar dari Judul Buku yang sama dianggap berada pada lokasi rak yang sama.
 
-Satu buku dapat memiliki lebih dari satu penulis.
+Contoh:
 
-### Aktor
+```text
+Judul Buku:
+Laravel untuk Pemula
 
-- Administrator
+Lokasi:
+Rak A-03
 
-### Acceptance Criteria
+Eksemplar:
+- Copy 001
+- Copy 002
+- Copy 003
+```
 
-- Sistem mendukung relasi banyak penulis pada satu judul buku.
-- Data penulis dapat digunakan kembali pada buku lain.
-
----
-
-## FR-BOOK-004 — Kelola Penerbit
-
-### Deskripsi
-
-Administrator dapat mengelola data penerbit buku.
-
-### Aktor
-
-- Administrator
-
-### Acceptance Criteria
-
-- Data penerbit dapat digunakan kembali oleh banyak buku.
+Pada MVP, satu Judul Buku tidak memiliki beberapa lokasi rak.
 
 ---
 
-## FR-BOOK-005 — Kelola Kategori Buku
+## 10. Catalog Visibility
 
-### Deskripsi
+Hanya Judul Buku dengan status `Published` yang dapat ditampilkan dalam katalog pengguna.
 
-Administrator dapat mengelola kategori buku yang digunakan sebagai klasifikasi koleksi.
+Judul Buku `Unpublished` tidak ditampilkan sebagai koleksi aktif.
 
-Kategori digunakan sebagai filter pada katalog online.
+Status Eksemplar tidak menentukan apakah Judul Buku ditampilkan atau tidak.
 
-### Aktor
+Contoh:
 
-- Administrator
+```text
+Judul Buku: Published
 
-### Acceptance Criteria
+Copy 001 → Borrowed
+Copy 002 → Borrowed
+Copy 003 → Available
+```
 
-- Administrator dapat menambah, mengubah, dan menghapus kategori.
-- Pengguna dapat melakukan filter berdasarkan kategori.
+Judul Buku tetap dapat ditampilkan.
 
----
-
-## FR-BOOK-006 — Kelola Lokasi Rak
-
-### Deskripsi
-
-Administrator dapat menentukan lokasi penyimpanan setiap eksemplar buku.
-
-Lokasi rak akan ditampilkan kepada pengguna setelah melakukan pencarian buku.
-
-### Acceptance Criteria
-
-- Setiap eksemplar memiliki lokasi penyimpanan.
-- Lokasi rak dapat diperbarui apabila buku dipindahkan.
+Jika seluruh Eksemplar sedang `Borrowed`, Judul Buku tetap dapat ditampilkan tetapi tidak dapat diajukan untuk peminjaman karena tidak ada Eksemplar `Available`.
 
 ---
 
-## FR-BOOK-007 — Import Data Buku
+## 11. Book Availability
 
-### Deskripsi
+Ketersediaan Judul Buku ditentukan berdasarkan Eksemplar.
 
-Administrator dapat menambahkan data buku melalui proses impor menggunakan file Microsoft Excel.
+Sebuah Judul Buku dapat diajukan untuk peminjaman apabila:
 
-### Acceptance Criteria
+- Status Judul Buku adalah `Published`.
+- Terdapat minimal satu Eksemplar dengan status `Available`.
 
-- Sistem melakukan validasi format file.
-- Sistem menampilkan jumlah data yang berhasil dan gagal diimpor.
-- Kesalahan pada satu baris data tidak menghentikan proses impor.
+Jika semua Eksemplar berstatus `Borrowed`, Judul Buku tidak dapat diajukan.
 
----
-
-## FR-BOOK-008 — Pencarian Buku
-
-### Deskripsi
-
-Pengguna dapat mencari koleksi buku melalui katalog online.
-
-Pencarian dilakukan berdasarkan informasi bibliografi buku.
-
-### Aktor
-
-- Mahasiswa
-- Dosen
-
-### Acceptance Criteria
-
-Pengguna dapat melakukan pencarian berdasarkan:
-
-- Judul buku
-- Penulis
-- Penerbit
-- Tahun terbit
+Sistem tidak menyediakan waiting list pada MVP.
 
 ---
 
-## FR-BOOK-009 — Filter Buku
+## 12. Book Management Flow
 
-### Deskripsi
+Alur pengelolaan buku:
 
-Pengguna dapat memfilter daftar buku berdasarkan kategori.
-
-### Acceptance Criteria
-
-- Filter kategori dapat digunakan bersamaan dengan pencarian.
-
----
-
-## FR-BOOK-010 — Detail Buku
-
-### Deskripsi
-
-Pengguna dapat melihat informasi lengkap mengenai sebuah buku.
-
-Informasi yang ditampilkan meliputi:
-
-- Judul
-- Penulis
-- Penerbit
-- Tahun terbit
-- ISBN (jika tersedia)
-- Kategori
-- Deskripsi
-- Lokasi rak
-- Jumlah eksemplar
-- Jumlah eksemplar yang tersedia
-
-### Acceptance Criteria
-
-Informasi buku ditampilkan secara lengkap sebelum pengguna melakukan proses peminjaman.
+1. Administrator membuat Judul Buku.
+2. Administrator mengisi informasi bibliografis.
+3. Administrator menentukan kategori.
+4. Administrator menentukan lokasi rak.
+5. Administrator menentukan status publikasi.
+6. Administrator menambahkan Eksemplar.
+7. Setiap Eksemplar memiliki status `Available`.
+8. Buku dapat ditampilkan pada katalog apabila Judul Buku berstatus `Published`.
+9. Ketika Eksemplar dipinjam, status berubah menjadi `Borrowed`.
+10. Ketika Eksemplar dikembalikan, status kembali menjadi `Available`.
 
 ---
 
-# 6. Informasi Buku
+## 13. Book Information
 
-Modul Book Management harus mampu mengelola informasi berikut untuk setiap judul buku.
+Informasi yang dapat dikelola untuk Judul Buku meliputi:
 
-| Informasi | Wajib | Keterangan |
-|-----------|:-----:|-----------|
-| Judul Buku | ✅ | Nama utama buku. |
-| Subjudul | ❌ | Diisi apabila buku memiliki subjudul. |
-| Penulis | ✅ | Satu judul buku dapat memiliki lebih dari satu penulis. |
-| Penerbit | ✅ | Penerbit yang menerbitkan buku. |
-| Tahun Terbit | ✅ | Tahun pertama atau edisi buku diterbitkan. |
-| ISBN | ❌ | Nomor ISBN apabila tersedia pada buku. |
-| Kategori | ✅ | Digunakan sebagai klasifikasi koleksi dan filter pencarian. |
-| Bahasa | ❌ | Bahasa utama buku. |
-| Edisi | ❌ | Informasi edisi buku, misalnya Edisi 2 atau Revisi. |
-| Deskripsi / Sinopsis | ❌ | Ringkasan isi buku. |
-| Sampul Buku | ❌ | Gambar sampul buku yang ditampilkan pada katalog. |
-
----
-
-## Informasi Eksemplar Buku
-
-Selain data bibliografi, setiap eksemplar buku memiliki informasi berikut.
-
-| Informasi | Wajib | Keterangan |
-|-----------|:-----:|-----------|
-| Kode Eksemplar | ✅ | Identitas unik untuk setiap eksemplar buku. |
-| Lokasi Rak | ✅ | Lokasi fisik penyimpanan buku di perpustakaan. |
-| Status Ketersediaan | ✅ | Menunjukkan apakah buku tersedia untuk dipinjam atau tidak. |
-
-> **Catatan:** Satu judul buku dapat memiliki satu atau lebih eksemplar. Seluruh eksemplar berbagi informasi bibliografi yang sama, namun masing-masing memiliki identitas, lokasi, dan status ketersediaan yang dikelola secara terpisah.
->
-> ---
-
-# 7. Business Rules
-
-## BR-BOOK-001 — Struktur Koleksi Buku
-
-Satu Judul Buku dapat memiliki satu atau lebih Eksemplar Buku.
-
----
-
-## BR-BOOK-002 — Objek Peminjaman
-
-Anggota perpustakaan melakukan peminjaman terhadap Eksemplar Buku, bukan terhadap Judul Buku.
-
----
-
-## BR-BOOK-003 — Kode Eksemplar
-
-Setiap Eksemplar Buku harus memiliki kode yang unik di dalam sistem.
-
-Format kode eksemplar ditentukan oleh kebijakan perpustakaan dan dapat berubah sewaktu-waktu tanpa memengaruhi data Judul Buku.
-
----
-
-## BR-BOOK-004 — ISBN
+- Judul.
+- Penulis.
+- Penerbit.
+- Tahun terbit.
+- ISBN apabila tersedia.
+- Kategori.
+- Lokasi rak.
+- Status publikasi.
 
 ISBN bersifat opsional.
 
-Judul Buku tetap dapat didaftarkan meskipun tidak memiliki ISBN.
+---
+
+## 14. Category
+
+Kategori digunakan untuk mengelompokkan koleksi buku.
+
+Kategori dikelola oleh Administrator.
+
+Administrator dapat:
+
+- Membuat kategori.
+- Mengubah kategori.
+- Mengelola kategori yang digunakan oleh Judul Buku.
+
+Kategori digunakan sebagai filter dalam katalog.
 
 ---
 
-## BR-BOOK-005 — Penulis
+## 15. Book Copy Identification
 
-Satu Judul Buku dapat memiliki lebih dari satu Penulis.
+Setiap Eksemplar memiliki identitas yang membedakan Eksemplar tersebut dari Eksemplar lainnya.
 
-Seorang Penulis dapat menulis lebih dari satu Judul Buku.
+Format khusus untuk kode Eksemplar belum ditetapkan pada MVP.
 
----
+Contoh format kode khusus seperti:
 
-## BR-BOOK-006 — Penerbit
+```text
+{JudulBuku}_{TahunTerbit}_{Penerbit}_{sortNumber}
+```
 
-Satu Judul Buku hanya memiliki satu Penerbit.
+belum menjadi requirement MVP.
 
-Seorang Penerbit dapat menerbitkan banyak Judul Buku.
-
----
-
-## BR-BOOK-007 — Kategori
-
-Kategori buku dikelola sepenuhnya oleh Administrator.
-
-Pengguna menggunakan kategori sebagai filter saat mencari koleksi buku.
+Implementasi kode identifikasi dapat ditentukan pada tahap System Design berdasarkan kebutuhan teknis dan operasional.
 
 ---
 
-## BR-BOOK-008 — Lokasi Rak
+## 16. Business Rules
 
-Setiap Eksemplar Buku harus memiliki lokasi penyimpanan fisik.
-
-Lokasi rak ditampilkan kepada pengguna untuk membantu menemukan buku di perpustakaan.
-
----
-
-## BR-BOOK-009 — Import Data Buku
-
-Administrator dapat menambahkan data buku melalui proses impor menggunakan file Microsoft Excel.
-
-Sistem harus memvalidasi data sebelum menyimpannya.
-
----
-
-## BR-BOOK-010 — Penghapusan Judul Buku
-
-Judul Buku hanya dapat dihapus apabila tidak memiliki Eksemplar Buku.
-
-Apabila masih terdapat satu atau lebih Eksemplar Buku yang terdaftar, sistem harus menolak proses penghapusan.
-
----
-
-## BR-BOOK-011 — Penghapusan Penulis
-
-Data Penulis tidak dapat dihapus apabila masih digunakan oleh satu atau lebih Judul Buku.
+| No | Aturan |
+|----|--------|
+| 1 | Satu Judul Buku dapat memiliki lebih dari satu Eksemplar. |
+| 2 | Setiap Eksemplar hanya terkait dengan satu Judul Buku. |
+| 3 | Judul Buku memiliki status `Published` atau `Unpublished`. |
+| 4 | Eksemplar memiliki status `Available` atau `Borrowed`. |
+| 5 | Judul Buku `Published` dapat ditampilkan pada katalog. |
+| 6 | Judul Buku `Unpublished` tidak ditampilkan sebagai koleksi aktif. |
+| 7 | Judul Buku hanya dapat diajukan apabila memiliki Eksemplar `Available`. |
+| 8 | User memilih Judul Buku, bukan Eksemplar tertentu. |
+| 9 | Sistem menentukan Eksemplar berdasarkan ketersediaan. |
+| 10 | Satu Judul Buku hanya memiliki satu lokasi rak pada MVP. |
+| 11 | ISBN bersifat opsional. |
+| 12 | Waiting list tidak termasuk MVP. |
+| 13 | Status Eksemplar berubah dari `Available` menjadi `Borrowed` ketika buku diambil. |
+| 14 | Status Eksemplar berubah dari `Borrowed` menjadi `Available` ketika pengembalian dicatat. |
+| 15 | Mahasiswa dan Dosen memiliki aturan akses dan peminjaman yang sama. |
+| 16 | Kategori buku dikelola oleh Administrator. |
 
 ---
 
-## BR-BOOK-012 — Penghapusan Penerbit
+## 17. Features Outside MVP
 
-Data Penerbit tidak dapat dihapus apabila masih digunakan oleh satu atau lebih Judul Buku.
+Fitur berikut tidak termasuk dalam MVP:
 
----
+- Pemilihan Eksemplar secara manual oleh anggota.
+- Waiting list buku.
+- QR Code untuk Eksemplar.
+- Format kode Eksemplar khusus.
+- Satu Judul Buku dengan beberapa lokasi rak.
+- Status Eksemplar seperti `Damaged`, `Lost`, atau `Inactive`.
+- Integrasi RFID.
+- Integrasi barcode scanner.
+- Pelacakan kondisi fisik buku secara khusus.
 
-## BR-BOOK-013 — Penghapusan Kategori
-
-Kategori tidak dapat dihapus apabila masih digunakan oleh satu atau lebih Judul Buku.
-
----
-
-# 8. Status Eksemplar Buku
-
-Setiap Eksemplar Buku harus memiliki salah satu status berikut.
-
-| Status | Deskripsi | Dapat Dipinjam |
-|--------|-----------|:--------------:|
-| Tersedia | Buku berada di perpustakaan dan siap dipinjam. | ✅ |
-| Dipinjam | Buku sedang dipinjam oleh anggota perpustakaan. | ❌ |
-| Rusak | Buku mengalami kerusakan dan tidak dapat dipinjam sementara. | ❌ |
-| Hilang | Buku dinyatakan hilang dan tidak tersedia untuk dipinjam. | ❌ |
-| Perawatan | Buku sedang menjalani proses perbaikan, inventarisasi, atau perawatan. | ❌ |
+Fitur tersebut dapat dipertimbangkan pada fase pengembangan berikutnya.
 
 ---
 
-## BR-BOOK-014 — Perubahan Status
+## 18. Acceptance Criteria
 
-Status Eksemplar Buku harus diperbarui secara otomatis atau manual sesuai proses bisnis yang terjadi.
+Modul Book Management dianggap memenuhi requirement apabila:
 
-Contoh:
+### Book Title
 
-- Tersedia → Dipinjam (setelah peminjaman disetujui dan buku diambil)
-- Dipinjam → Tersedia (setelah pengembalian diterima Administrator)
-- Tersedia → Rusak (ditetapkan oleh Administrator)
-- Tersedia → Hilang (ditetapkan oleh Administrator)
-- Rusak → Tersedia (setelah buku selesai diperbaiki)
-- Perawatan → Tersedia (setelah proses perawatan selesai)
+- [ ] Administrator dapat membuat Judul Buku.
+- [ ] Administrator dapat mengubah data Judul Buku.
+- [ ] Administrator dapat mengatur status `Published`.
+- [ ] Administrator dapat mengatur status `Unpublished`.
+- [ ] Judul Buku memiliki informasi bibliografis.
+- [ ] ISBN dapat disimpan apabila tersedia.
+
+### Book Copy
+
+- [ ] Administrator dapat menambahkan Eksemplar.
+- [ ] Satu Judul Buku dapat memiliki banyak Eksemplar.
+- [ ] Setiap Eksemplar memiliki identitas tersendiri.
+- [ ] Eksemplar memiliki status `Available`.
+- [ ] Eksemplar memiliki status `Borrowed`.
+- [ ] Administrator dapat melihat status Eksemplar.
+
+### Location
+
+- [ ] Administrator dapat menentukan lokasi rak untuk Judul Buku.
+- [ ] Satu Judul Buku hanya memiliki satu lokasi rak pada MVP.
+
+### Availability
+
+- [ ] Judul Buku `Published` dapat ditampilkan pada katalog.
+- [ ] Judul Buku `Unpublished` tidak ditampilkan sebagai koleksi aktif.
+- [ ] Judul Buku dapat diajukan apabila memiliki Eksemplar `Available`.
+- [ ] Judul Buku yang seluruh Eksemplarnya `Borrowed` tidak dapat diajukan.
+- [ ] Sistem tidak menyediakan waiting list.
+
+### Borrowing Integration
+
+- [ ] User memilih Judul Buku, bukan Eksemplar.
+- [ ] Sistem menentukan Eksemplar berdasarkan ketersediaan.
+- [ ] Eksemplar berubah menjadi `Borrowed` ketika buku diambil.
+- [ ] Eksemplar berubah kembali menjadi `Available` ketika buku dikembalikan.
 
 ---
 
-## BR-BOOK-015 — Kelayakan Dipinjam
+## 19. Status Requirement
 
-Hanya Eksemplar Buku dengan status **Tersedia** yang dapat diajukan untuk dipinjam.
-
----
-
-# 9. Definition of Done
-
-Dokumen ini dinyatakan selesai apabila seluruh kriteria berikut telah terpenuhi.
-
-| No | Kriteria | Status |
-|----|----------|:------:|
-| 1 | Tujuan modul telah didefinisikan | ☑ |
-| 2 | Istilah bisnis telah didefinisikan | ☑ |
-| 3 | Aktor telah diidentifikasi | ☑ |
-| 4 | Ruang lingkup modul telah ditentukan | ☑ |
-| 5 | Functional Requirement telah ditulis | ☑ |
-| 6 | Informasi bisnis yang dikelola telah didefinisikan | ☑ |
-| 7 | Business Rule telah ditulis | ☑ |
-| 8 | Status Eksemplar Buku telah didefinisikan | ☑ |
-| 9 | Tidak terdapat asumsi teknis (database, API, framework) | ☑ |
-| 10 | Siap dilakukan review bersama client | ☑ |
-
----
-
-# 10. Catatan
-
-Dokumen ini mendefinisikan kebutuhan bisnis untuk modul Book Management.
-
-Dokumen ini tidak membahas desain basis data, implementasi API, struktur kode program, maupun teknologi yang digunakan. Seluruh aspek teknis akan dijelaskan pada dokumen tahap desain dan pengembangan.
+| Item | Status |
+|------|--------|
+| Business Requirement | Resolved |
+| Functional Requirement | Resolved |
+| Business Rules | Resolved |
+| Acceptance Criteria | Defined |
+| Client Review | Pending |
+| Client Approval | Pending |

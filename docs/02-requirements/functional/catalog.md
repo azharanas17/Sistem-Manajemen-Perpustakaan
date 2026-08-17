@@ -1,461 +1,439 @@
-# Online Catalog
+# Catalog
 
-# 1. Tujuan
+## 1. Overview
 
-Modul Online Catalog menyediakan katalog koleksi buku perpustakaan yang dapat digunakan oleh pengguna untuk mencari, menemukan, dan melihat informasi buku yang tersedia.
+Catalog merupakan modul yang digunakan untuk menyediakan informasi koleksi buku perpustakaan kepada pengguna.
 
-Modul ini menjadi antarmuka utama bagi Mahasiswa dan Dosen untuk menemukan koleksi sebelum melakukan proses peminjaman.
+Katalog menampilkan informasi berdasarkan **Judul Buku**, bukan berdasarkan Eksemplar secara terpisah.
 
----
-
-# 2. Istilah yang Digunakan
-
-## Katalog Online
-
-Katalog Online adalah layanan yang memungkinkan pengguna mencari dan melihat informasi koleksi buku perpustakaan melalui website.
+Satu Judul Buku dapat memiliki beberapa Eksemplar, tetapi pengguna tetap berinteraksi dengan Judul Buku.
 
 ---
 
-## Hasil Pencarian
+## 2. Tujuan
 
-Hasil Pencarian adalah daftar Judul Buku yang sesuai dengan kata kunci atau filter yang digunakan pengguna.
+Modul Catalog bertujuan untuk:
 
----
-
-## Detail Judul Buku
-
-Detail Judul Buku adalah halaman yang menampilkan informasi bibliografi lengkap mengenai suatu Judul Buku serta informasi Eksemplar Buku yang tersedia.
-
----
-
-## Ketersediaan
-
-Ketersediaan menunjukkan kondisi Eksemplar Buku yang berkaitan dengan suatu Judul Buku, khususnya apakah terdapat eksemplar yang dapat dipinjam.
+- Memudahkan pengguna menemukan koleksi buku.
+- Menampilkan informasi bibliografis buku.
+- Menampilkan status publikasi koleksi.
+- Menampilkan informasi ketersediaan buku.
+- Menyediakan pencarian dan filter koleksi.
+- Menghubungkan katalog dengan proses peminjaman.
 
 ---
 
-# 3. Aktor
+## 3. Aktor
 
-| Aktor         | Deskripsi                                                         |
-| ------------- | ----------------------------------------------------------------- |
-| Mahasiswa     | Mencari, melihat, dan mengajukan peminjaman buku melalui katalog. |
-| Dosen         | Mencari, melihat, dan mengajukan peminjaman buku melalui katalog. |
-| Administrator | Mengelola data koleksi yang menjadi sumber informasi katalog.     |
+### 3.1 Administrator
 
----
+Administrator dapat:
 
-# 4. Tujuan Bisnis
+- Melihat katalog.
+- Mengelola data Judul Buku.
+- Mengelola kategori.
+- Mengelola lokasi rak.
+- Mengelola Eksemplar.
+- Melihat informasi ketersediaan.
 
-Implementasi modul ini bertujuan untuk:
+### 3.2 Mahasiswa
 
-* Memudahkan pengguna menemukan koleksi perpustakaan.
-* Mengurangi kebutuhan pengguna untuk mencari buku secara manual.
-* Menampilkan lokasi fisik buku di perpustakaan.
-* Menampilkan status ketersediaan buku.
-* Menjadi titik awal proses peminjaman buku.
-* Menyediakan informasi koleksi yang konsisten dengan data perpustakaan.
+Mahasiswa dapat:
 
----
+- Mengakses katalog setelah login.
+- Mencari Judul Buku.
+- Memfilter koleksi.
+- Melihat detail Judul Buku.
+- Melihat informasi ketersediaan.
+- Mengajukan peminjaman melalui Judul Buku.
 
-# 5. Ruang Lingkup
+### 3.3 Dosen
 
-Modul Online Catalog mencakup:
+Dosen memiliki hak akses katalog yang sama dengan Mahasiswa.
 
-* Menampilkan katalog buku.
-* Pencarian buku.
-* Filter berdasarkan kategori.
-* Melihat hasil pencarian.
-* Melihat detail Judul Buku.
-* Melihat informasi Penulis.
-* Melihat informasi Penerbit.
-* Melihat tahun terbit.
-* Melihat ISBN apabila tersedia.
-* Melihat lokasi rak.
-* Melihat jumlah dan status Eksemplar Buku.
-* Mengarahkan pengguna ke proses peminjaman.
+Dosen dapat:
+
+- Mengakses katalog setelah login.
+- Mencari Judul Buku.
+- Memfilter koleksi.
+- Melihat detail Judul Buku.
+- Melihat informasi ketersediaan.
+- Mengajukan peminjaman melalui Judul Buku.
 
 ---
 
-# 6. Functional Requirements
+## 4. Akses Katalog
 
-## FR-CAT-001 — Menampilkan Katalog Buku
+Katalog hanya dapat diakses oleh pengguna yang telah login.
 
-### Tujuan
+Guest tidak dapat mengakses katalog.
 
-Pengguna dapat melihat koleksi buku yang tersedia melalui katalog online.
+Dengan demikian:
 
-### Aktor
+```text
+Guest
+  ↓
+Tidak dapat mengakses Catalog
 
-* Mahasiswa
-* Dosen
+Mahasiswa / Dosen
+  ↓
+Login
+  ↓
+Dapat mengakses Catalog
+```
 
-### Acceptance Criteria
-
-* Sistem menampilkan daftar Judul Buku.
-* Informasi dasar buku ditampilkan pada daftar katalog.
-* Pengguna dapat membuka halaman Detail Judul Buku.
-
----
-
-## FR-CAT-002 — Pencarian Berdasarkan Judul
-
-### Tujuan
-
-Pengguna dapat menemukan buku berdasarkan Judul Buku.
-
-### Acceptance Criteria
-
-* Pengguna dapat memasukkan kata kunci judul.
-* Sistem menampilkan Judul Buku yang sesuai dengan kata kunci.
-* Pencarian tidak harus menggunakan judul secara lengkap.
+Administrator juga dapat mengakses katalog setelah login.
 
 ---
 
-## FR-CAT-003 — Pencarian Berdasarkan Penulis
+## 5. Catalog Item
 
-### Tujuan
-
-Pengguna dapat menemukan buku berdasarkan Penulis.
-
-### Acceptance Criteria
-
-* Pengguna dapat memasukkan nama Penulis sebagai kata kunci.
-* Sistem menampilkan Judul Buku yang memiliki Penulis tersebut.
-* Sistem mendukung buku dengan lebih dari satu Penulis.
-
----
-
-## FR-CAT-004 — Pencarian Berdasarkan Penerbit
-
-### Tujuan
-
-Pengguna dapat menemukan buku berdasarkan Penerbit.
-
-### Acceptance Criteria
-
-* Pengguna dapat memasukkan nama Penerbit.
-* Sistem menampilkan Judul Buku yang diterbitkan oleh Penerbit tersebut.
-
----
-
-## FR-CAT-005 — Pencarian Berdasarkan Tahun Terbit
-
-### Tujuan
-
-Pengguna dapat menemukan buku berdasarkan Tahun Terbit.
-
-### Acceptance Criteria
-
-* Pengguna dapat menggunakan Tahun Terbit sebagai kata kunci atau parameter pencarian.
-* Sistem menampilkan Judul Buku yang sesuai dengan tahun yang dicari.
-
----
-
-## FR-CAT-006 — Filter Berdasarkan Kategori
-
-### Tujuan
-
-Pengguna dapat mempersempit hasil katalog berdasarkan kategori buku.
-
-### Acceptance Criteria
-
-* Sistem menyediakan filter Kategori.
-* Pengguna dapat memilih satu kategori.
-* Filter dapat digunakan bersama pencarian.
-
-Kategori dikelola oleh Administrator melalui Book Management.
-
----
-
-## FR-CAT-007 — Melihat Detail Judul Buku
-
-### Tujuan
-
-Pengguna dapat melihat informasi lengkap sebuah Judul Buku.
-
-### Acceptance Criteria
-
-Halaman detail menampilkan informasi seperti:
-
-* Judul Buku
-* Penulis
-* Penerbit
-* Tahun Terbit
-* ISBN apabila tersedia
-* Kategori
-* Bahasa apabila tersedia
-* Edisi apabila tersedia
-* Deskripsi atau sinopsis apabila tersedia
-* Sampul buku apabila tersedia
-
----
-
-## FR-CAT-008 — Melihat Eksemplar Buku
-
-### Tujuan
-
-Pengguna dapat mengetahui keberadaan Eksemplar Buku dari suatu Judul Buku.
-
-### Acceptance Criteria
-
-Halaman Detail Judul Buku menampilkan informasi:
-
-* Jumlah Eksemplar Buku.
-* Jumlah Eksemplar Buku yang tersedia.
-* Lokasi rak.
-* Status ketersediaan.
-
----
-
-## FR-CAT-009 — Melihat Lokasi Rak
-
-### Tujuan
-
-Pengguna dapat mengetahui lokasi fisik buku di perpustakaan.
-
-### Acceptance Criteria
-
-* Lokasi rak ditampilkan pada Detail Judul Buku.
-* Informasi lokasi dapat digunakan pengguna untuk menemukan buku secara fisik.
-
----
-
-## FR-CAT-010 — Menampilkan Status Ketersediaan
-
-### Tujuan
-
-Pengguna dapat mengetahui apakah suatu Judul Buku memiliki Eksemplar Buku yang dapat dipinjam.
-
-### Acceptance Criteria
-
-Sistem menampilkan informasi ketersediaan yang mudah dipahami pengguna.
+Setiap item katalog merepresentasikan satu Judul Buku.
 
 Contoh:
 
-* Tersedia
-* Tidak tersedia
-
-Status tersebut ditentukan berdasarkan status Eksemplar Buku.
-
----
-
-## FR-CAT-011 — Mengajukan Peminjaman
-
-### Tujuan
-
-Pengguna dapat memulai proses peminjaman dari katalog.
-
-### Acceptance Criteria
-
-* Pengguna yang memenuhi syarat dapat mengajukan peminjaman.
-* Pengguna diarahkan ke proses Borrowing Management.
-* Hanya Eksemplar Buku yang memenuhi syarat peminjaman yang dapat dipilih.
-
-Detail mengenai proses pengajuan, persetujuan, pengambilan, dan pengembalian didefinisikan dalam `borrowing.md`.
-
----
-
-# 7. Informasi yang Ditampilkan
-
-Informasi yang ditampilkan dalam katalog berasal dari data Judul Buku dan Eksemplar Buku.
-
-## Informasi Judul Buku
-
-| Informasi            | Ditampilkan | Keterangan                    |
-| -------------------- | :---------: | ----------------------------- |
-| Judul                |      ✅      | Judul utama buku.             |
-| Penulis              |      ✅      | Satu atau lebih penulis.      |
-| Penerbit             |      ✅      | Penerbit buku.                |
-| Tahun Terbit         |      ✅      | Tahun penerbitan.             |
-| ISBN                 |      ❌      | Ditampilkan apabila tersedia. |
-| Kategori             |      ✅      | Kategori buku.                |
-| Bahasa               |      ❌      | Ditampilkan apabila tersedia. |
-| Edisi                |      ❌      | Ditampilkan apabila tersedia. |
-| Deskripsi / Sinopsis |      ❌      | Ditampilkan apabila tersedia. |
-| Sampul               |      ❌      | Ditampilkan apabila tersedia. |
-
----
-
-## Informasi Eksemplar
-
-| Informasi        | Ditampilkan | Keterangan                                 |
-| ---------------- | :---------: | ------------------------------------------ |
-| Jumlah Eksemplar |      ✅      | Jumlah seluruh eksemplar dari suatu judul. |
-| Jumlah Tersedia  |      ✅      | Jumlah eksemplar yang dapat dipinjam.      |
-| Lokasi Rak       |      ✅      | Lokasi fisik penyimpanan.                  |
-| Status           |      ✅      | Ketersediaan eksemplar.                    |
-
----
-
-# 8. Business Rules
-
-## BR-CAT-001 — Sumber Data Katalog
-
-Data katalog berasal dari data koleksi yang dikelola melalui Book Management.
-
-Administrator tidak perlu memasukkan data buku secara terpisah untuk kebutuhan katalog.
-
----
-
-## BR-CAT-002 — Hanya Koleksi Aktif
-
-Hanya Judul Buku yang masih menjadi koleksi aktif yang ditampilkan dalam katalog.
-
----
-
-## BR-CAT-003 — Satu Judul, Banyak Eksemplar
-
-Satu Judul Buku dapat ditampilkan sebagai satu hasil katalog meskipun memiliki beberapa Eksemplar Buku.
-
-Informasi jumlah dan ketersediaan eksemplar ditampilkan pada Detail Judul Buku.
-
----
-
-## BR-CAT-004 — Penulis Ganda
-
-Katalog harus dapat menampilkan lebih dari satu Penulis untuk satu Judul Buku.
-
----
-
-## BR-CAT-005 — ISBN Opsional
-
-Ketiadaan ISBN tidak menyebabkan Judul Buku tidak dapat ditampilkan di katalog.
-
----
-
-## BR-CAT-006 — Kategori sebagai Filter
-
-Kategori digunakan sebagai filter katalog dan bukan merupakan keyword pencarian utama.
-
----
-
-## BR-CAT-007 — Lokasi Rak
-
-Lokasi rak digunakan untuk membantu pengguna menemukan Eksemplar Buku secara fisik.
-
-Lokasi rak bukan merupakan keyword pencarian utama.
-
----
-
-## BR-CAT-008 — Ketersediaan
-
-Status ketersediaan pada tingkat Judul Buku ditentukan berdasarkan kondisi Eksemplar Buku yang terkait.
-
-Apabila setidaknya terdapat satu Eksemplar Buku yang berstatus Tersedia, Judul Buku dapat ditampilkan sebagai memiliki ketersediaan.
-
----
-
-## BR-CAT-009 — Buku Tidak Tersedia
-
-Judul Buku tetap dapat ditampilkan meskipun seluruh Eksemplarnya sedang tidak tersedia.
-
-Pengguna harus dapat mengetahui bahwa buku tersebut saat ini tidak tersedia.
-
----
-
-## BR-CAT-010 — Akses Peminjaman
-
-Pengguna hanya dapat memulai proses peminjaman apabila memenuhi aturan peminjaman yang ditentukan dalam Borrowing Management.
-
----
-
-# 9. Alur Penggunaan Katalog
-
-Alur utama katalog:
-
 ```text
-Katalog Online
-      │
-      ▼
- Masukkan Keyword
-      │
-      ▼
-Hasil Pencarian
-      │
-      ├──── Filter Kategori
-      │
-      ▼
- Detail Judul Buku
-      │
-      ├── Informasi Bibliografi
-      │
-      ├── Penulis
-      │
-      ├── Penerbit
-      │
-      ├── Ketersediaan
-      │
-      └── Lokasi Rak
-              │
-              ▼
-       Ajukan Peminjaman
-              │
-              ▼
-      Borrowing Management
+Judul Buku:
+Laravel untuk Pemula
+
+Penulis:
+John Doe
+
+Penerbit:
+ABC Publisher
+
+Tahun:
+2025
+
+Lokasi:
+Rak A-03
+
+Eksemplar:
+3
+
+Available:
+2
 ```
 
+Eksemplar tidak ditampilkan sebagai item katalog yang terpisah.
+
 ---
 
-# 10. Pencarian dan Filter
+## 6. Book Title Visibility
 
-Katalog menyediakan pencarian berdasarkan empat informasi utama:
+Hanya Judul Buku dengan status:
 
-1. Judul Buku
-2. Penulis
-3. Penerbit
-4. Tahun Terbit
+`Published`
 
-Kategori digunakan sebagai filter.
+yang ditampilkan sebagai koleksi aktif dalam katalog.
 
-Contoh penggunaan:
+Judul Buku dengan status:
+
+`Unpublished`
+
+tidak ditampilkan sebagai koleksi aktif.
+
+---
+
+## 7. Book Availability
+
+Ketersediaan buku ditentukan berdasarkan status Eksemplar.
+
+Status Eksemplar:
+
+- `Available`
+- `Borrowed`
+
+Contoh:
 
 ```text
-Keyword:
-"Laravel"
+Judul Buku:
+Laravel untuk Pemula
 
-Filter:
-Kategori = Pemrograman
+Status:
+Published
+
+Eksemplar:
+- Copy 001 → Borrowed
+- Copy 002 → Available
+- Copy 003 → Available
+
+Total:
+3
+
+Available:
+2
 ```
 
-Sistem kemudian menampilkan Judul Buku yang sesuai dengan keyword dan filter tersebut.
+Maka Judul Buku dapat diajukan untuk peminjaman karena masih memiliki Eksemplar `Available`.
 
 ---
 
-# 11. Definition of Done
+## 8. Book Unavailable
 
-Dokumen Online Catalog dapat dinyatakan **Approved** apabila:
+Jika seluruh Eksemplar suatu Judul Buku berstatus `Borrowed`, Judul Buku tetap dapat ditampilkan pada katalog selama status Judul Buku adalah `Published`.
 
-| No | Kriteria                                                     | Status |
-| -- | ------------------------------------------------------------ | :----: |
-| 1  | Tujuan modul telah didefinisikan                             |    ☑   |
-| 2  | Istilah bisnis telah didefinisikan                           |    ☑   |
-| 3  | Aktor telah diidentifikasi                                   |    ☑   |
-| 4  | Ruang lingkup telah ditentukan                               |    ☑   |
-| 5  | Functional Requirement telah ditulis                         |    ☑   |
-| 6  | Informasi yang ditampilkan telah didefinisikan               |    ☑   |
-| 7  | Business Rule telah ditulis                                  |    ☑   |
-| 8  | Pencarian telah didefinisikan                                |    ☑   |
-| 9  | Filter telah didefinisikan                                   |    ☑   |
-| 10 | Detail Judul Buku telah didefinisikan                        |    ☑   |
-| 11 | Informasi Eksemplar telah didefinisikan                      |    ☑   |
-| 12 | Integrasi dengan Borrowing telah didefinisikan               |    ☑   |
-| 13 | Tidak terdapat detail implementasi teknis                    |    ☑   |
-| 14 | Seluruh Open Question telah dikonfirmasi oleh client         |    ☐   |
-| 15 | Dokumen siap digunakan sebagai dasar desain dan pengembangan |    ☐   |
+Namun, pengguna tidak dapat membuat pengajuan peminjaman terhadap Judul Buku tersebut.
+
+Contoh:
+
+```text
+Judul Buku:
+Database Design
+
+Status:
+Published
+
+Eksemplar:
+- Copy 001 → Borrowed
+- Copy 002 → Borrowed
+- Copy 003 → Borrowed
+
+Available:
+0
+```
+
+Hasil:
+
+```text
+Tampil di katalog: Ya
+Dapat diajukan: Tidak
+```
+
+Sistem tidak menyediakan waiting list pada MVP.
 
 ---
 
-# 12. Open Questions
+## 9. Book Selection
 
-Bagian ini berisi keputusan yang masih memerlukan konfirmasi dari pihak perpustakaan.
+Ketika pengguna ingin meminjam buku, pengguna memilih:
 
-| ID         | Pertanyaan                                                                                        | Status |
-| ---------- | ------------------------------------------------------------------------------------------------- | :----: |
-| OQ-CAT-001 | Apakah katalog dapat diakses tanpa login?                                                         |    ⏳   |
-| OQ-CAT-002 | Apakah pengguna dapat melihat buku yang sedang dipinjam oleh pengguna lain?                       |    ⏳   |
-| OQ-CAT-003 | Apakah satu Judul Buku dapat memiliki beberapa lokasi rak?                                        |    ⏳   |
-| OQ-CAT-004 | Apakah katalog perlu menyediakan pagination atau infinite scrolling?                              |    ⏳   |
-| OQ-CAT-005 | Apakah pengguna perlu dapat mengurutkan hasil pencarian berdasarkan judul, tahun, atau relevansi? |    ⏳   |
-| OQ-CAT-006 | Apakah perlu tersedia fitur pencarian berdasarkan ISBN meskipun ISBN bukan keyword utama?         |    ⏳   |
+**Judul Buku**
 
-> Open Question tidak dianggap sebagai requirement final sebelum mendapatkan konfirmasi dari pihak perpustakaan.
+Pengguna tidak memilih Eksemplar tertentu.
+
+Contoh:
+
+```text
+User memilih:
+
+Laravel untuk Pemula
+```
+
+Bukan:
+
+```text
+Laravel untuk Pemula
+├── Copy 001
+├── Copy 002
+└── Copy 003
+```
+
+Sistem menentukan Eksemplar yang digunakan berdasarkan ketersediaan pada proses peminjaman.
+
+---
+
+## 10. Search
+
+Katalog menyediakan pencarian berdasarkan informasi utama buku.
+
+Keyword pencarian dapat mencakup:
+
+- Judul.
+- Penulis.
+- Penerbit.
+- Tahun terbit.
+
+Pencarian dilakukan terhadap Judul Buku.
+
+---
+
+## 11. Filter
+
+Katalog menyediakan filter untuk membantu pengguna menemukan koleksi.
+
+Filter utama meliputi:
+
+- Kategori.
+- Tahun terbit.
+- Ketersediaan apabila diperlukan.
+
+Kategori dikelola oleh Administrator.
+
+---
+
+## 12. Book Detail
+
+Pengguna dapat membuka halaman detail Judul Buku.
+
+Informasi yang dapat ditampilkan meliputi:
+
+- Judul.
+- Penulis.
+- Penerbit.
+- Tahun terbit.
+- ISBN apabila tersedia.
+- Kategori.
+- Lokasi rak.
+- Jumlah Eksemplar.
+- Jumlah Eksemplar yang tersedia.
+- Status ketersediaan.
+
+Detail Eksemplar individual tidak menjadi fokus interaksi pengguna.
+
+---
+
+## 13. Book Location
+
+Setiap Judul Buku memiliki satu lokasi rak.
+
+Lokasi rak digunakan untuk membantu pengguna menemukan buku secara fisik di perpustakaan.
+
+Contoh:
+
+```text
+Lokasi:
+Rak A-03
+```
+
+Satu Judul Buku tidak memiliki beberapa lokasi rak pada MVP.
+
+---
+
+## 14. Catalog and Borrowing
+
+Catalog terintegrasi dengan Borrowing Management.
+
+Alur:
+
+1. User login.
+2. User membuka katalog.
+3. User mencari Judul Buku.
+4. User membuka detail buku.
+5. Sistem menampilkan ketersediaan.
+6. Jika tersedia, user dapat mengajukan peminjaman.
+7. User memilih Judul Buku.
+8. Sistem menentukan Eksemplar berdasarkan ketersediaan.
+
+---
+
+## 15. Access Control
+
+Akses katalog:
+
+| Aktor | Akses |
+|-------|-------|
+| Guest | Tidak dapat mengakses |
+| Mahasiswa | Dapat mengakses setelah login |
+| Dosen | Dapat mengakses setelah login |
+| Administrator | Dapat mengakses setelah login |
+
+Akses peminjaman tetap mengikuti aturan Borrowing Management.
+
+---
+
+## 16. Business Rules
+
+| No | Aturan |
+|----|--------|
+| 1 | Katalog hanya dapat diakses oleh user yang telah login. |
+| 2 | Guest tidak dapat mengakses katalog. |
+| 3 | Katalog menampilkan Judul Buku, bukan Eksemplar sebagai item terpisah. |
+| 4 | Hanya Judul Buku berstatus `Published` yang ditampilkan sebagai koleksi aktif. |
+| 5 | Judul Buku `Unpublished` tidak ditampilkan sebagai koleksi aktif. |
+| 6 | Satu Judul Buku dapat memiliki banyak Eksemplar. |
+| 7 | Eksemplar memiliki status `Available` atau `Borrowed`. |
+| 8 | Judul Buku tetap dapat ditampilkan walaupun seluruh Eksemplarnya sedang `Borrowed`. |
+| 9 | Judul Buku tidak dapat diajukan apabila tidak memiliki Eksemplar `Available`. |
+| 10 | User memilih Judul Buku, bukan Eksemplar tertentu. |
+| 11 | Sistem menentukan Eksemplar berdasarkan ketersediaan. |
+| 12 | Waiting list tidak termasuk MVP. |
+| 13 | Satu Judul Buku hanya memiliki satu lokasi rak pada MVP. |
+| 14 | Pencarian dapat menggunakan Judul, Penulis, Penerbit, dan Tahun. |
+| 15 | Kategori dapat digunakan sebagai filter. |
+| 16 | Kategori dikelola oleh Administrator. |
+| 17 | Mahasiswa dan Dosen memiliki hak akses katalog yang sama. |
+
+---
+
+## 17. Features Outside MVP
+
+Fitur berikut tidak termasuk dalam MVP:
+
+- Akses katalog tanpa login.
+- Pemilihan Eksemplar secara manual.
+- Waiting list.
+- QR Code untuk buku.
+- Barcode scanning untuk pengguna.
+- Rekomendasi buku berbasis AI.
+- Personalisasi rekomendasi.
+- Rating dan review buku.
+- Integrasi RFID.
+
+Fitur tersebut dapat dipertimbangkan pada fase pengembangan berikutnya.
+
+---
+
+## 18. Acceptance Criteria
+
+Modul Catalog dianggap memenuhi requirement apabila:
+
+### Access
+
+- [ ] Guest tidak dapat mengakses katalog.
+- [ ] Mahasiswa dapat mengakses katalog setelah login.
+- [ ] Dosen dapat mengakses katalog setelah login.
+- [ ] Administrator dapat mengakses katalog setelah login.
+
+### Catalog
+
+- [ ] Sistem menampilkan Judul Buku sebagai item katalog.
+- [ ] Eksemplar tidak ditampilkan sebagai item katalog terpisah.
+- [ ] Hanya Judul Buku `Published` yang ditampilkan sebagai koleksi aktif.
+- [ ] Judul Buku `Unpublished` tidak ditampilkan sebagai koleksi aktif.
+
+### Search
+
+- [ ] User dapat mencari berdasarkan Judul.
+- [ ] User dapat mencari berdasarkan Penulis.
+- [ ] User dapat mencari berdasarkan Penerbit.
+- [ ] User dapat mencari berdasarkan Tahun.
+
+### Filter
+
+- [ ] User dapat menggunakan filter Kategori.
+- [ ] Kategori dikelola oleh Administrator.
+
+### Availability
+
+- [ ] Sistem dapat menampilkan informasi ketersediaan Eksemplar.
+- [ ] Judul Buku tetap dapat ditampilkan ketika semua Eksemplarnya `Borrowed`.
+- [ ] Judul Buku yang tidak memiliki Eksemplar `Available` tidak dapat diajukan.
+- [ ] Sistem tidak menyediakan waiting list.
+
+### Book Detail
+
+- [ ] User dapat melihat detail Judul Buku.
+- [ ] Detail menampilkan informasi bibliografis.
+- [ ] Detail menampilkan lokasi rak.
+- [ ] Detail dapat menampilkan jumlah Eksemplar.
+- [ ] Detail dapat menampilkan jumlah Eksemplar yang tersedia.
+
+### Borrowing Integration
+
+- [ ] User memilih Judul Buku ketika melakukan peminjaman.
+- [ ] User tidak memilih Eksemplar tertentu.
+- [ ] Sistem menentukan Eksemplar berdasarkan ketersediaan.
+
+---
+
+## 19. Status Requirement
+
+| Item | Status |
+|------|--------|
+| Business Requirement | Resolved |
+| Functional Requirement | Resolved |
+| Business Rules | Resolved |
+| Acceptance Criteria | Defined |
+| Client Review | Pending |
+| Client Approval | Pending |
